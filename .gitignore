@@ -1,1 +1,4 @@
 .vagrant
+ssh-config
+*.def
+*.sif
