@@ -1,7 +1,7 @@
 # -*- mode: bash -*-
 # vi: set ft=bash :
-export VAE_MENU=(debian centos)
-export VAE_DEFAULT=debian
-export VAE_MENU_IMG_debian=/srv/debian.sif
-export VAE_MENU_IMG_centos=/srv/centos.sif
+export VAE_MENU=(debian10 centos7)
+export VAE_DEFAULT=debian10
+export VAE_MENU_IMG_debian=/tmp/debian10.sif
+export VAE_MENU_IMG_centos=/tmp/centos10.sif
 

@@ -12,14 +12,18 @@ Vagrant.configure('2') do |config|
     config.vm.hostname = "centos7"
     config.vm.box = "centos/7"
 
+    # use this for a second sshd instance...
+    config.vm.network "forwarded_port", host: 2223, guest: 23
+
     config.vm.box_check_update = false
     %w(
       sshd_container
       sshd_container.sh
-      debian10.sif
-      centos7.sif
+      /tmp/debian10.sif
+      /tmp/centos7.sif
      ).each do |file|
-      config.vm.provision "file", source: "#{file}", destination: "/tmp/#{file}"
+       name = File.basename file
+       config.vm.provision "file", source: "#{file}", destination: "/tmp/#{name}"
     end
 
 
@@ -32,7 +36,7 @@ Vagrant.configure('2') do |config|
         cp -v /tmp/sshd_container /etc/default/
         cp -v /tmp/sshd_container.sh /etc/ssh/
         grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
-        systemctl restart sshd.service
+    #    systemctl restart sshd.service
       )
     end
   end

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd /tmp
+
 cat > debian10.def <<EOF
 Bootstrap: docker
 From: debian:10
@@ -15,3 +17,5 @@ EOF
 
 test -f centos7.sif \
         || singularity build --fakeroot centos7.sif centos7.def
+
+cd - >/dev/null
