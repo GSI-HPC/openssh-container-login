@@ -17,13 +17,13 @@ optional arguments:
   --version            program version number "
 
 
-function _debug() {
+_debug() {
         if [ "$SSHD_CONTAINER_DEBUG" = "true" ]; then
                 echo 1>&2 "Debug: $@"
         fi
 }
 
-function _error() {
+_error() {
         echo 1>&2 "Error: $@"
 	exit 1
 }
@@ -57,7 +57,6 @@ while true; do
         esac
 done
 
-shell=$(getent passwd $USER | cut -d : -f 7)
 
 # load the container default configuration if present
 if test -f $SSHD_CONTAINER_CONFIG
@@ -67,7 +66,17 @@ else
         _debug "$SSHD_CONTAINER_CONFIG configuration file missing"
 fi
 
-SINGULARIY_CONTAINER=${SINGULARIY_CONTAINER:-none}
+shell=$(getent passwd $USER | cut -d : -f 7)
+
+case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
+	(x*[![:blank:]]*)
+                # is set...
+                ;;
+	(x|""|*)
+                # if empty, unset or blank set the default
+                SINGULARIY_CONTAINER=${SINGULARIY_CONTAINER:-none}
+                ;;
+esac
 
 if [ "$SINGULARITY_CONTAINER" == "none" ]
 then
@@ -76,38 +85,12 @@ then
 
 # if a singularity container is defined...
 else
-        PS3="Choose VAE by number: "
-        __menu=0
-        if [ "$VAE" == "menu" ]
+        if test -f $SINGULARITY_CONTAINER
         then
-                __menu=1  # remember that menu was presented
-
-                echo "Available Virtual Application Environments (VAE)"
-
-                select VAE in ${VAE_MENU[@]};
-                do
-                        [ "$VAE" != "menu" -a -n "$VAE" ] && break
-                        echo "Invalid input '$REPLY'. Try again!"
-                done
+                echo $SINGULARITY_CONTAINER
+                echo exec singularity exec $SINGULARITY_CONTAINER \
+                        $shell -l ${SSH_ORIGINAL_COMMAND:+-c "$SSH_ORIGINAL_COMMAND"}
+        else
+                _error "Container $SINGULARITY_CONTAINER missing"
         fi
-
-        if [ $__menu -a -z "$VAE" ]
-        then
-                echo "Menu selection failed, falling back to default VAE (${VAE_DEFAULT})"
-                VAE=$VAE_DEFAULT
-        fi
-
-        __vae_img="VAE_MENU_IMG_$VAE"
-        VAE_IMG=${!__vae_img}
-
-        if [ -n "$VAE_IMG" ]
-        then
-                export SINGULARITY_CONTAINER=$VAE_IMG
-
-                [ -z "$SSH_ORIGINAL_COMMAND" ] && \
-                        echo "Virtual Application Environment launched: $(realpath $VAE_IMG)"
-        fi
-
-        exec ${VAE_IMG:+/usr/bin/singularity exec $VAE_IMG} \
-                $shell -l ${SSH_ORIGINAL_COMMAND:+-c "$SSH_ORIGINAL_COMMAND"}
 fi
