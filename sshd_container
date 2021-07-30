@@ -1,10 +1,10 @@
 # -*- mode: bash -*-
 # vi: set ft=bash nospell :
+
+export SSHD_CONTAINER_OPTIONS="--bind /srv"
 export SSHD_CONTAINER_DEFAULT=/tmp/debian10.sif
 declare -a SSHD_CONTAINER_MENU=(
         /tmp/debian10.sif
         /tmp/centos7.sif
         none
 )
-
-
