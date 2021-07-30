@@ -72,11 +72,19 @@ else
         then
                 _debug "User command line $SSH_ORIGINAL_COMMAND"
                 exec singularity exec \
+                     --bind /etc/slurm,/var/run/munge \
+                     --bind /var/spool/slurm \
+                     --bind /var/lib/sss/pipes/nss \
+                     --bind /cvmfs \
                      $SINGULARITY_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
         #...otherwise spawn a shell
         else
                 echo Container launched: $(realpath $SINGULARITY_CONTAINER)
                 exec singularity exec \
+                     --bind /etc/slurm,/var/run/munge \
+                     --bind /var/spool/slurm \
+                     --bind /var/lib/sss/pipes/nss \
+                     --bind /cvmfs \
                      $SINGULARITY_CONTAINER $shell -l
         fi
 fi
