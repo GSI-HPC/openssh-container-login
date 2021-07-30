@@ -37,7 +37,7 @@ default configuration file [sshd_container][01]:
 
 File                          | Description
 ------------------------------|-----------------------------------
-[sshd_container][01]          | Configuration files (default path `/etc/default/sshd_container`)
+[sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
 
 

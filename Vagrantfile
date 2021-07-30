@@ -16,6 +16,7 @@ Vagrant.configure('2') do |config|
     # use this for a second sshd instance...
     config.vm.network "forwarded_port", host: 2223, guest: 23
 
+    # copy files into the box
     config.vm.box_check_update = false
     %w(
       sshd_container
@@ -27,13 +28,12 @@ Vagrant.configure('2') do |config|
        config.vm.provision "file", source: "#{file}", destination: "/tmp/#{name}"
     end
 
-
+    # install dependencies and configured sshd
     config.vm.provision "shell" do |s|
       s.privileged = true
       s.inline = %Q(
         yum install -y vim epel-release
         yum install -y singularity
-        cp -v /tmp/*.sif /srv/
         cp -v /tmp/sshd_container /etc/default/
         cp -v /tmp/sshd_container.sh /etc/ssh/
         grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
