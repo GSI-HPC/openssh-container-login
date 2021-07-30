@@ -23,7 +23,9 @@ From the `sshd_config` manual:
 > to accept any environment variables.
 
 This uses an Environment variable `SINGULARITY_CONTAINER` to select a target
-container image for login.
+container image for login. `ForceCommand` executes a script to consume this
+environment variable, validates the input and lunches a container for the
+`ssh` login.
 
 File                          | Description
 ------------------------------|-----------------------------------
