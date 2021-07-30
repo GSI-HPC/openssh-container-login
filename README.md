@@ -8,7 +8,7 @@ ForceCommand /etc/ssh/sshd_container.sh
 ```
 
 This uses an Environment variable `SINGULARITY_CONTAINER` to select a target
-container images for logins.
+container images for login.
 
 File                          | Description
 ------------------------------|-----------------------------------
@@ -18,12 +18,20 @@ File                          | Description
 [01]: sshd_container
 [02]: sshd_container.sh
 
+### Development
+
 Build two simple test singularity containers with [containers.sh](containers.sh).
 
+Work on the login script using you localhost:
+
 ```bash
-# test the script on localhost
-SSHD_CONTAINER_DEBUG=true SINGULARITY_CONTAINER=menu SSHD_CONTAINER_CONFIG=sshd_container ./sshd_container.sh
+SSHD_CONTAINER_DEBUG=true \
+SINGULARITY_CONTAINER=menu \
+SSHD_CONTAINER_CONFIG=sshd_container \
+        ./sshd_container.sh
 ```
+
+Bootstrap a Vagrant box to test `ssh` login:
 
 ```bash
 # start a second instance of sshd in foreground on port 23
