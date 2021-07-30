@@ -81,5 +81,19 @@ Container launched: /tmp/centos7.sif
 vagrant@centos7:~ > 
 ```
 
+From the `ssh_config` manual:
+
+> **SendEnv**
+>
+> Specifies what variables from the local environ(7) should be sent to the
+> server. Note that environment passing is only supported for protocol 2. The
+> server must also support it, and the server must be configured to accept
+> these environment variables. Refer to `AcceptEnv` in sshd_config(5) for how
+> to configure the server. Variables are specified by name, which may contain
+> wildcard characters. Multiple environment variables may be separated by
+> whitespace or spread across multiple `SendEnv` directives. The default is not
+> to send any environment variables.
+
+
 
 
