@@ -8,7 +8,7 @@ ForceCommand /etc/ssh/sshd_container.sh
 ```
 
 This uses an Environment variable `SINGULARITY_CONTAINER` to select a target
-container images for login.
+container image for login.
 
 File                          | Description
 ------------------------------|-----------------------------------
@@ -31,7 +31,9 @@ SSHD_CONTAINER_CONFIG=sshd_container \
         ./sshd_container.sh
 ```
 
-Bootstrap a Vagrant box to test `ssh` login:
+Bootstrap a test virtual machine using the includes [Vagrantfile](Vagrantfile)
+
+Start `sshd` on port 23 in foreground for debugging:
 
 ```bash
 # start a second instance of sshd in foreground on port 23
@@ -40,3 +42,7 @@ vagrant ssh -- sudo /sbin/sshd -d -p 23
 vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
+
+Uncomment `systemctl restart sshd.service` in the Vagrantfile to run on the default port.
+
+
