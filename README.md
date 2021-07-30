@@ -92,8 +92,8 @@ From the `ssh_config` manual:
 > whitespace or spread across multiple `SendEnv` directives. The default is not
 > to send any environment variables.
 
-Passing `none` in the environment variable will prevent any container from
-launch and drop the user into a shell running on the host environment:
+**Use `none` to prevent any container from launch** and drop the user into a
+shell running on the host environment:
 
 ```bash
 # append to configuration the client SSH configuration
@@ -102,7 +102,7 @@ launch and drop the user into a shell running on the host environment:
 [vagrant@centos7 ~]$
 ```
 
-Passing `menu` will present a list of available containers defined in the
+**`menu` will present a list of available containers** defined in the
 [sshd_container][01] configuration:
 
 ```bash
