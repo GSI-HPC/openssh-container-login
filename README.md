@@ -55,7 +55,7 @@ SSHD_CONTAINER_CONFIG=sshd_container \
         ./sshd_container.sh
 ```
 
-Bootstrap a test virtual machine using the includes [Vagrantfile](Vagrantfile)
+Bootstrap a test virtual machine using the included [Vagrantfile](Vagrantfile).
 
 Start `sshd` on port 23 in foreground for debugging:
 
