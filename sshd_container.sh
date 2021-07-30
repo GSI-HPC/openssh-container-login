@@ -57,6 +57,18 @@ _debug SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER
 
 shell=$(getent passwd $USER | cut -d : -f 7)
 
+if [ "$SINGULARITY_CONTAINER" == "menu" ]
+then
+
+        echo "Available containers"
+        PS3="Select: "
+        select opt in "${SSHD_CONTAINER_MENU[@]}"
+        do
+                SINGULARITY_CONTAINER=$opt
+                break
+        done
+fi
+
 if [ "$SINGULARITY_CONTAINER" == "none" ]
 then
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
