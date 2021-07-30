@@ -13,7 +13,7 @@ _error() {
 	exit 1
 }
 
-SSHD_CONTAINER_CONFIG={SSHD_CONTAINER_CONFIG:-/etc/default/sshd_container}
+SSHD_CONTAINER_CONFIG=${SSHD_CONTAINER_CONFIG:-/etc/default/sshd_container}
 
 # load the container default configuration if present
 if test -f $SSHD_CONTAINER_CONFIG
@@ -59,16 +59,24 @@ shell=$(getent passwd $USER | cut -d : -f 7)
 
 if [ "$SINGULARITY_CONTAINER" == "none" ]
 then
-        echo "No singularity container defined"
-        $shell -l ${SSH_ORIGINAL_COMMAND:+-c "$SSH_ORIGINAL_COMMAND"}
-
-# if a singularity container is defined...
-else
-        if test -f $SINGULARITY_CONTAINER
+        if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
-                echo exec singularity exec $SINGULARITY_CONTAINER \
-                        $shell -l ${SSH_ORIGINAL_COMMAND:+-c "$SSH_ORIGINAL_COMMAND"}
+                _debug "User command line $SSH_ORIGINAL_COMMAND"
+                exec $shell -l -c "$SSH_ORIGINAL_COMMAND"
         else
-                _error "Container $SINGULARITY_CONTAINER missing"
+                exec $shell -l
+        fi
+#...launched into a containers
+else
+        if [ -n "$SSH_ORIGINAL_COMMAND" ] 
+        then
+                _debug "User command line $SSH_ORIGINAL_COMMAND"
+                exec singularity exec \
+                     $SINGULARITY_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
+        #...otherwise spawn a shell
+        else
+                echo Container launched: $(realpath $SINGULARITY_CONTAINER)
+                exec singularity exec \
+                     $SINGULARITY_CONTAINER $shell -l
         fi
 fi
