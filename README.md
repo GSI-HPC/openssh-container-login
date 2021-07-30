@@ -22,10 +22,10 @@ From the `sshd_config` manual:
 > reason, care should be taken in the use of this directive. The default is not
 > to accept any environment variables.
 
-This uses an Environment variable `SINGULARITY_CONTAINER` to select a target
-container image for login. `ForceCommand` executes a script to consume this
-environment variable, validates the input and lunches a container for the
-`ssh` login.
+The environment variable `SINGULARITY_CONTAINER` optionally defined by a use
+select a target container image for login. `ForceCommand` executes the script
+`sshd_container.sh` to consume this environment variable, validates its input
+and lunches a container during `ssh` login.
 
 File                          | Description
 ------------------------------|-----------------------------------
