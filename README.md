@@ -1,16 +1,12 @@
 # SSH Container Login
 
-Enable direct login into a container with following `sshd` configuration:
-
-```
-AcceptEnv SINGULARITY_CONTAINER
-ForceCommand /etc/ssh/sshd_container.sh
-```
-
 This example uses [Singularity][03] as container runtime. However this 
 approach should be applicable to other container runtimes as well. Users
 specify an environment variable `SINGULARITY_CONTAINER` before executing
-`ssh` login in order to select a container on the login node.
+`ssh` login in order to select a container on the login node. `sshd` 
+executes a custom script to then launch the requested container as login
+environment.
+
 
 From the `sshd_config` manual:
 
@@ -27,10 +23,16 @@ From the `sshd_config` manual:
 > reason, care should be taken in the use of this directive. The default is not
 > to accept any environment variables.
 
-The environment variable `SINGULARITY_CONTAINER` optionally defined by a use
-select a target container image for login. `ForceCommand` executes the script
-[sshd_container.sh][02] to consume this environment variable, validates its input
-and lunches a container during `ssh` login.
+Enable direct login into a container with following `sshd` configuration:
+
+```
+AcceptEnv SINGULARITY_CONTAINER
+ForceCommand /etc/ssh/sshd_container.sh
+```
+
+`ForceCommand` executes the script [sshd_container.sh][02] to consume this
+environment variable, validates its input and lunches a container during `ssh`
+login.
 
 File                          | Description
 ------------------------------|-----------------------------------
