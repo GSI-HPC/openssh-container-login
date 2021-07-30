@@ -7,6 +7,21 @@ AcceptEnv SINGULARITY_CONTAINER
 ForceCommand /etc/ssh/sshd_container.sh
 ```
 
+From the `sshd_config` manual:
+
+
+> **AcceptEnv**
+>
+> Specifies what environment variables sent by the client will be copied into
+> the session's environ(7). See SendEnv in ssh_config(5) for how to configure
+> the client. Note that environment passing is only supported for protocol 2.
+> Variables are specified by name, which may contain the wildcard characters
+> `*` and `?`. Multiple environment variables may be separated by whitespace or
+> spread across multiple AcceptEnv directives. Be warned that some environment
+> variables could be used to bypass restricted user environments. For this
+> reason, care should be taken in the use of this directive. The default is not
+> to accept any environment variables.
+
 This uses an Environment variable `SINGULARITY_CONTAINER` to select a target
 container image for login.
 
@@ -44,5 +59,25 @@ ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
 Uncomment `systemctl restart sshd.service` in the Vagrantfile to run on the default port.
+
+### Usage
+
+By default `ssh` login launches a container specified with `SSHD_CONTAINER_DEFAULT`.
+
+```
+>>> ssh -F ssh-config vagrant@ssh-container   
+Container launched: /tmp/debian10.sif
+vagrant@centos7:~ >
+```
+
+Users can specify a specific container with the variable `SINGULARITY_CONTAINER`
+
+```bash
+>>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
+        ssh -F ssh-config -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container 
+Container launched: /tmp/centos7.sif
+vagrant@centos7:~ > 
+```
+
 
 
