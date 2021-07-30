@@ -58,7 +58,8 @@ vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
-Uncomment `systemctl restart sshd.service` in the Vagrantfile to run on the default port.
+Uncomment `systemctl restart sshd.service` in the [Vagrantfile][Vagrantfile] to
+run on the default port.
 
 ### Usage
 
