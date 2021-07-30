@@ -24,7 +24,7 @@ From the `sshd_config` manual:
 
 The environment variable `SINGULARITY_CONTAINER` optionally defined by a use
 select a target container image for login. `ForceCommand` executes the script
-`sshd_container.sh` to consume this environment variable, validates its input
+[sshd_container.sh][02] to consume this environment variable, validates its input
 and lunches a container during `ssh` login.
 
 File                          | Description
@@ -32,8 +32,6 @@ File                          | Description
 [sshd_container][01]          | Configuration files (default path `/etc/default/sshd_container`)
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
 
-[01]: sshd_container
-[02]: sshd_container.sh
 
 ### Development
 
@@ -104,4 +102,20 @@ launch and drop the user into a shell running on the host environment:
 [vagrant@centos7 ~]$
 ```
 
+Passing `menu` will present a list of available containers defined in the
+[sshd_container][01] configuration:
 
+```bash
+>>> SINGULARITY_CONTAINER=menu ssh -F ssh-config vagrant@ssh-container
+Available containers
+1) /tmp/debian10.sif
+2) /tmp/centos7.sif
+3) none
+Select: 2
+Container launched: /tmp/centos7.sif
+vagrant@centos7:~ >
+```
+
+
+[01]: sshd_container
+[02]: sshd_container.sh
