@@ -36,6 +36,7 @@ File                          | Description
 ### Development
 
 Build two simple test singularity containers with [containers.sh](containers.sh).
+(This requires `singularity` installed on the host.)
 
 Work on the login script using you localhost:
 
