@@ -7,6 +7,11 @@ AcceptEnv SINGULARITY_CONTAINER
 ForceCommand /etc/ssh/sshd_container.sh
 ```
 
+This example uses [Singularity][03] as container runtime. However this 
+approach should be applicable to other container runtimes as well. Users
+specify an environment variable `SINGULARITY_CONTAINER` before executing
+`ssh` login in order to select a container on the login node.
+
 From the `sshd_config` manual:
 
 
@@ -121,3 +126,4 @@ vagrant@centos7:~ >
 
 [01]: sshd_container
 [02]: sshd_container.sh
+[03]: https://sylabs.io/singularity/
