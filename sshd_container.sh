@@ -2,21 +2,6 @@
 
 VERSION=0.1
 
-# Filename of this script
-SCRIPT=${0##*/}
-
-# Help text for this script
-HELP=\
-"usage: $SCRIPT [-h] [--version] [arg]
-Add more text here
-positional arguments:
-  arg                  describe the argument
-optional arguments:
-  -d, --debug          enable verbose output
-  -h, --help           show this help message
-  --version            program version number "
-
-
 _debug() {
         if [ "$SSHD_CONTAINER_DEBUG" = "true" ]; then
                 echo 1>&2 "Debug: $@"
@@ -28,35 +13,7 @@ _error() {
 	exit 1
 }
 
-SSHD_CONTAINER_CONFIG=/etc/default/sshd_container
-
-# Parse the command line options
-ARGS=$(getopt -o h -l "help,version" -- "$@")
-eval set -- "$ARGS"
-while true; do
-        case "$1" in
-        -d|--debug)
-                SSHD_CONTAINER_DEBUG=true
-                shift
-                ;;
-        -h|--help)
-                echo "$HELP"
-                exit 0
-                ;;
-        --version)
-                echo $VERSION
-                exit 0
-                ;;
-        --)
-                shift
-                break 
-                ;;
-        *) 
-                break 
-                ;;
-        esac
-done
-
+SSHD_CONTAINER_CONFIG={SSHD_CONTAINER_CONFIG:-/etc/default/sshd_container}
 
 # load the container default configuration if present
 if test -f $SSHD_CONTAINER_CONFIG
@@ -66,17 +23,39 @@ else
         _debug "$SSHD_CONTAINER_CONFIG configuration file missing"
 fi
 
-shell=$(getent passwd $USER | cut -d : -f 7)
-
 case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
+        # is set...
 	(x*[![:blank:]]*)
-                # is set...
+                case "$SINGULARITY_CONTAINER" in
+                (none|menu)
+                        _debug "User explicitly selects none|menu"
+                        ;;
+                (*)
+                        # check if container exits
+                        if ! test -f $SINGULARITY_CONTAINER
+                        then
+                                echo "Container $SINGULARITY_CONTAINER missing"
+                                SINGULARITY_CONTAINER=none
+                        fi
+                        ;;
+                esac
                 ;;
+        # if empty, unset or blank use the default container if possible
 	(x|""|*)
-                # if empty, unset or blank set the default
-                SINGULARIY_CONTAINER=${SINGULARIY_CONTAINER:-none}
+                # if the default is set...
+                if ! test -z "$SINGULARITY_CONTAINER_DEFAULT"
+                then
+                        _debug "Using default container..."
+                        SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER_DEFAULT
+                else
+                        _debug "No default container configuration..."
+                        SINGULARITY_CONTAINER=none
+                fi
                 ;;
 esac
+_debug SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER
+
+shell=$(getent passwd $USER | cut -d : -f 7)
 
 if [ "$SINGULARITY_CONTAINER" == "none" ]
 then
@@ -87,7 +66,6 @@ then
 else
         if test -f $SINGULARITY_CONTAINER
         then
-                echo $SINGULARITY_CONTAINER
                 echo exec singularity exec $SINGULARITY_CONTAINER \
                         $shell -l ${SSH_ORIGINAL_COMMAND:+-c "$SSH_ORIGINAL_COMMAND"}
         else

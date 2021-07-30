@@ -1,6 +1,6 @@
 # -*- mode: bash -*-
 # vi: set ft=bash :
-export SINGULARIY_CONTAINER=/tmp/debian10.sif
+export SINGULARITY_CONTAINER_DEFAULT=/tmp/debian10.sif
 export VAE_MENU=(debian10 centos7)
 export VAE_MENU_IMG_debian=/tmp/debian10.sif
 export VAE_MENU_IMG_centos=/tmp/centos10.sif

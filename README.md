@@ -1,4 +1,4 @@
-
+Build two simple test singularity containers with [containers.sh](containers.sh).
 
 ```bash
 # start a second instance of sshd in foreground on port 23
