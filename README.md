@@ -62,7 +62,7 @@ Uncomment `systemctl restart sshd.service` in the Vagrantfile to run on the defa
 
 ### Usage
 
-By default `ssh` login launches a container specified with `SSHD_CONTAINER_DEFAULT`:
+By **default `ssh` login launches a container specified with `SSHD_CONTAINER_DEFAULT`**:
 
 ```
 >>> ssh -F ssh-config vagrant@ssh-container   
@@ -70,7 +70,7 @@ Container launched: /tmp/debian10.sif
 vagrant@centos7:~ >
 ```
 
-Users can specify a specific container with the variable `SINGULARITY_CONTAINER`:
+Users can **specify a specific container with the variable `SINGULARITY_CONTAINER`**:
 
 ```bash
 >>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
