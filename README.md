@@ -88,8 +88,8 @@ Variables in the [sshd_container][01] configuration file:
 Name                        | Description
 ----------------------------|-------------------------------------
 `SSHD_CONTAINER_DEFAULT`    | Default container to start unless the users passes the environment variable `SINGULARITY_CONTAINER` at login.
-`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container luanch, i.e. `--bind=/srv`.
-`SSHD_CONTAINER_MENU`       | Items presented to the user for selection when requesting a menu with `SINGUALRITY_CONTAINER=menu`.
+`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container launch for example `--bind=/srv`.
+`SSHD_CONTAINER_MENU`       | List of containers presented to the user for selection when requesting a menu with `SINGUALRITY_CONTAINER=menu`.
 
 
 ## Usage
