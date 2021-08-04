@@ -1,12 +1,19 @@
 # OpenSSH Container Login
 
-This example uses [Singularity][03] as container runtime. However this approach
-should be applicable to other container runtimes as well. **Users may specify
-an environment variable `SINGULARITY_CONTAINER` before executing `ssh` login in
-order to select a container on the login node.** `sshd` executes a custom
-script to then launch the requested container as login environment.
+The [sshd_container.sh][02] script distributed in this repository is used in
+conjunction with the OpenSSH `sshd` daemon to launch a Linux container for each
+`ssh` login from a client. This containerizes the environment of user sessions
+by default. Users may specify an environment variable `SINGULARITY_CONTAINER`
+before executing `ssh` login in order to select a specific container on the
+login node.
 
-From the `sshd_config` manual:
+Note that this implementation uses [Singularity][03] as container run-time.
+However this approach should be applicable to other container run-time systems
+as well (for example [Podman][04]). 
+
+In order to configure `sshd` to accept `SINGULARITY_CONTAINER` as input
+environment variable the configuration option `AcceptEnv` (from the
+`sshd_config` manual):
 
 > **AcceptEnv**
 >
@@ -182,4 +189,5 @@ vagrant@centos7:~ >
 
 [01]: sshd_container
 [02]: sshd_container.sh
-[03]: https://sylabs.io/singularity/
+[03]: https://sylabs.io/singularity
+[04]: https://podman.io
