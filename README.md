@@ -164,14 +164,19 @@ vagrant   2854  2833  0 06:01 ?        00:00:00     /bin/ps -fH
 1 2 3 4
 ```
 
-File transfer with `scp` and `rsync`:
+File transfer with `scp`, `rsync` and `sftp`:
 
 ```bash
 scp -d -F ssh-config vagrant@ssh-container:/bin/bash /tmp
 scp -d -F ssh-config /bin/bash vagrant@ssh-container:/tmp
 rsync -e 'ssh -F ssh-config' /bin/bash vagrant@ssh-container:/tmp
 rsync -e 'ssh -F ssh-config' vagrant@ssh-container:/bin/bash /tmp
+sftp -F ssh-config vagrant@ssh-container:/bin/bash /tmp
+sftp -F ssh-config /bin/bash vagrant@ssh-container:/tmp
 ```
+
+_Note that the container images require to have corresponding packages
+installed cf. [containers.sh](containers.sh)_
 
 Users can specify **a specific container** with the variable `SINGULARITY_CONTAINER`:
 
