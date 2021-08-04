@@ -7,7 +7,7 @@ Bootstrap: docker
 From: debian:10
 %post
   apt update -y
-  apt install -y zsh
+  apt install -y zsh openssh-client procps rsync
 EOF
 
 test -f debian10.sif \
@@ -17,7 +17,7 @@ cat > centos7.def <<EOF
 Bootstrap: docker
 From: centos:7
 %post
-  yum install -y zsh
+  yum install -y zsh openssh-client procps-ng rsync
 EOF
 
 test -f centos7.sif \

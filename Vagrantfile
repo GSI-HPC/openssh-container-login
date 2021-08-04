@@ -34,8 +34,8 @@ Vagrant.configure('2') do |config|
       s.inline = %Q(
         yum install -y vim epel-release
         yum install -y singularity
-        cp -v /tmp/sshd_container /etc/default/
-        cp -v /tmp/sshd_container.sh /etc/ssh/
+        cp -v /tmp/sshd_container /etc/default/sshd_container
+        cp -v /tmp/sshd_container.sh /etc/ssh/sshd_container.sh
         grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
       )
     end
