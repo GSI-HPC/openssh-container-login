@@ -41,7 +41,7 @@ File                          | Description
 ### Development
 
 Build two singularity containers with the script [containers.sh](containers.sh).
-(This requires `singularity` installed on the host.). Containers are stored in
+(This requires `singularity` installed on the host). Containers are stored in
 `/tmp/{debian10,centos7}.sif` for testing login into a container.
 
 Work on the login script using you localhost:
@@ -69,6 +69,10 @@ vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
+_Note that `ssh-config` provides the default configuration from
+Vagrant to connect with SSH to the box. Examples in the following
+section will use this file for the `ssh`, `scp` and `rsync` commands._
+
 Alternatively restart `sshd.service` to run on the default port 22:
 
 ```bash
@@ -77,12 +81,29 @@ vagrant ssh -- sudo systemctl restart sshd.service
 
 ### Usage
 
-By **default `ssh` login launches a container specified with `SSHD_CONTAINER_DEFAULT`**:
+By **default `ssh` login launches a container specified with
+`SSHD_CONTAINER_DEFAULT`**:
 
 ```
+# login into a containerized interactive shell
 >>> ssh -F ssh-config vagrant@ssh-container   
 Container launched: /tmp/debian10.sif
 vagrant@centos7:~ >
+# run a containerized command
+>>> ssh -F ssh-config vagrant@ssh-container -- /bin/ps -fH
+UID        PID  PPID  C STIME TTY          TIME CMD
+vagrant   2832  2829  0 06:01 ?        00:00:00 sshd: vagrant@notty
+vagrant   2833  2832  0 06:01 ?        00:00:00   Singularity runtime parent
+vagrant   2854  2833  0 06:01 ?        00:00:00     /bin/ps -fH
+```
+
+File transfer with `scp` and `rsync`:
+
+```bash
+scp -d -F ssh-config vagrant@ssh-container:/bin/bash /tmp
+scp -d -F ssh-config /bin/bash vagrant@ssh-container:/tmp
+rsync -e 'ssh -F ssh-config' /bin/bash vagrant@ssh-container:/tmp
+rsync -e 'ssh -F ssh-config' vagrant@ssh-container:/bin/bash /tmp
 ```
 
 Users can **specify a specific container with the variable `SINGULARITY_CONTAINER`**:
