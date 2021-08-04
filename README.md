@@ -7,14 +7,27 @@ by default. Users may specify an environment variable `SINGULARITY_CONTAINER`
 before executing `ssh` login in order to select a specific container on the
 login node.
 
-Note that this implementation uses [Singularity][03] as container run-time.
+_Note that this implementation uses [Singularity][03] as container run-time.
 However this approach should be applicable to other container run-time systems
-as well (for example [Podman][04]). 
+as well (for example [Podman][04])._
 
 ## Configuration
 
-Configure the OpenSSH daemon to accept `SINGULARITY_CONTAINER` as input
-environment with the configuration option `AcceptEnv` (from the
+File                          | Description
+------------------------------|-----------------------------------
+[sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
+[sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
+
+Copy the configuration file [sshd_container][01] and the
+[sshd_container.sh][02] script to the expected default locations. Add following lines to `/etc/ssh/sshd_config`and restart `sshd`:
+
+```bash
+AcceptEnv SINGULARITY_CONTAINER
+ForceCommand /etc/ssh/sshd_container.sh
+```
+
+The line above configures the OpenSSH daemon to accept `SINGULARITY_CONTAINER` as input
+environment with the option `AcceptEnv` (from the
 `sshd_config` manual):
 
 > **AcceptEnv**
@@ -29,26 +42,26 @@ environment with the configuration option `AcceptEnv` (from the
 > reason, care should be taken in the use of this directive. The default is not
 > to accept any environment variables.
 
-Add following lines to `/etc/ssh/sshd_config`:
-
-```bash
-AcceptEnv SINGULARITY_CONTAINER
-ForceCommand /etc/ssh/sshd_container.sh
-```
 
 `ForceCommand` executes the script [sshd_container.sh][02] which reads the
 `SINGULARITY_CONTAINER` environment variable, validates the input and launches
-a container during `ssh` login. Administrators customize the behavior of the
-login script via a default configuration file [sshd_container][01]:
+a container during `ssh` login. 
 
-File                          | Description
-------------------------------|-----------------------------------
-[sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
-[sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
+> **ForceCommand**
+> 
+> Forces the execution of the command specified by `ForceCommand`, ignoring any
+> command supplied by the client and `~/.ssh/rc` if present. The command is
+> invoked by using the user's login shell with the `-c` option. This applies to
+> shell, command, or subsystem execution. It is most useful inside a Match
+> block. The command originally supplied by the client is available in the
+> `SSH_ORIGINAL_COMMAND` environment variable. Specifying a command of
+> internal-sftp will force the use of an in-process SFTP server that requires
+> no support files when used with `ChrootDirectory`. The default is none.
 
-Variables in the [sshd_container][01] configuration file:
+Administrators customize the behavior of the login script via the configuration
+file [sshd_container][01]:
 
-Name                        | Description
+Variable                    | Description
 ----------------------------|-------------------------------------
 `SSHD_CONTAINER_DEFAULT`    | Default container to start unless the users passes the environment variable `SINGULARITY_CONTAINER` at login.
 `SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container launch for example `--bind=/srv`.
