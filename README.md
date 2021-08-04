@@ -104,11 +104,11 @@ _Note that `ssh-config` provides the default configuration from
 Vagrant to connect with SSH to the box. This file is generated
 in the Development section above._
 
+### Defaults
 
-By **default `ssh` login launches a container specified with
-`SSHD_CONTAINER_DEFAULT`**:
+By default `ssh` login launches a container specified with `SSHD_CONTAINER_DEFAULT`:
 
-```
+```bash
 # login into a containerized interactive shell
 >>> ssh -F ssh-config vagrant@ssh-container   
 Container launched: /tmp/debian10.sif
@@ -133,7 +133,9 @@ rsync -e 'ssh -F ssh-config' /bin/bash vagrant@ssh-container:/tmp
 rsync -e 'ssh -F ssh-config' vagrant@ssh-container:/bin/bash /tmp
 ```
 
-Users can **specify a specific container with the variable `SINGULARITY_CONTAINER`**:
+### Specific Container
+
+Users can specify a specific container with the variable `SINGULARITY_CONTAINER`:
 
 ```bash
 >>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
@@ -155,7 +157,9 @@ From the `ssh_config` manual:
 > whitespace or spread across multiple `SendEnv` directives. The default is not
 > to send any environment variables.
 
-**Use `none` to prevent any container from launch** and drop the user into a
+### No Container
+
+Use `none` to prevent any container from launch and drop the user into a
 shell running on the host environment:
 
 ```bash
@@ -165,7 +169,9 @@ shell running on the host environment:
 [vagrant@centos7 ~]$
 ```
 
-**`menu` will present a list of available containers** defined in the
+### Container Menu
+
+`menu` will present a list of available containers defined in the
 [sshd_container][01] configuration:
 
 ```bash
