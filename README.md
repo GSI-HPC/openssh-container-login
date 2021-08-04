@@ -11,8 +11,8 @@ Note that this implementation uses [Singularity][03] as container run-time.
 However this approach should be applicable to other container run-time systems
 as well (for example [Podman][04]). 
 
-In order to configure `sshd` to accept `SINGULARITY_CONTAINER` as input
-environment variable the configuration option `AcceptEnv` (from the
+Configure the OpenSSH daemon to accept `SINGULARITY_CONTAINER` as input
+environment with the configuration option `AcceptEnv` (from the
 `sshd_config` manual):
 
 > **AcceptEnv**
@@ -27,9 +27,9 @@ environment variable the configuration option `AcceptEnv` (from the
 > reason, care should be taken in the use of this directive. The default is not
 > to accept any environment variables.
 
-Enable direct login into a container with following `sshd` configuration:
+Add following lines to `/etc/ssh/sshd_config`:
 
-```
+```bash
 AcceptEnv SINGULARITY_CONTAINER
 ForceCommand /etc/ssh/sshd_container.sh
 ```
