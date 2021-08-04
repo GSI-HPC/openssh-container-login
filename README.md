@@ -63,7 +63,7 @@ Start `sshd` on port 23 in foreground for debugging:
 
 ```bash
 # start a second instance of sshd in foreground on port 23
-vagrant ssh -- sudo /sbin/sshd -o LogLevel=DEBUG3 -De -p 23
+vagrant ssh -- sudo /sbin/sshd -o LogLevel=DEBUG -De -p 23
 # connect via the forwarding port...
 vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
