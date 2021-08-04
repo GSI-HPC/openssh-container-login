@@ -162,8 +162,6 @@ vagrant@centos7:~ >
 Login into the **host environment** using `SINGULARITY_CONTAINER=none`:
 
 ```bash
-# append to configuration the client SSH configuration
->>> echo "  SendEnv=SINGULARITY_CONTAINER" >> ssh-config
 >>> SINGULARITY_CONTAINER=none ssh -F ssh-config vagrant@ssh-container
 [vagrant@centos7 ~]$
 ```
