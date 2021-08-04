@@ -55,6 +55,7 @@ SSHD_CONTAINER_CONFIG=sshd_container \
 Bootstrap a test virtual machine using the included [Vagrantfile](Vagrantfile):
 
 * Installs the `singularity` package from Fedora EPEL
+* Copies the Singularity containers to `/tmp`
 * Deploys [sshd_container][01] and [sshd_container.sh][02]
 * Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
 
