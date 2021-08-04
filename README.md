@@ -41,8 +41,8 @@ File                          | Description
 ### Development
 
 Build two singularity containers with the script [containers.sh](containers.sh).
-(This requires `singularity` installed on the host.). The are stored in
-`/tmp/{debian10,centos7}.sif` for testing the container login.
+(This requires `singularity` installed on the host.). Containers are stored in
+`/tmp/{debian10,centos7}.sif` for testing login into a container.
 
 Work on the login script using you localhost:
 
@@ -50,12 +50,12 @@ Work on the login script using you localhost:
 SSHD_CONTAINER_DEBUG=true \
 SINGULARITY_CONTAINER=menu \
 SSHD_CONTAINER_CONFIG=sshd_container \
-        ./sshd_container.sh
+        bash ./sshd_container.sh
 ```
 
 Bootstrap a test virtual machine using the included [Vagrantfile](Vagrantfile):
 
-* Installs the `singularity` packages from Fedora EPEL
+* Installs the `singularity` package from Fedora EPEL
 * Deploys [sshd_container][01] and [sshd_container.sh][02]
 * Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
 
@@ -69,8 +69,11 @@ vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
-Alternatively uncomment `systemctl restart sshd.service` in the
-[Vagrantfile](Vagrantfile) to run on the default port 22.
+Alternatively restart `sshd.service` to run on the default port 22:
+
+```bash
+vagrant ssh -- sudo systemctl restart sshd.service
+```
 
 ### Usage
 
