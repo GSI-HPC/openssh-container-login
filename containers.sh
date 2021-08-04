@@ -7,7 +7,7 @@ Bootstrap: docker
 From: debian:10
 %post
   apt update -y
-  apt install -y zsh openssh-client procps rsync
+  apt install -y zsh openssh-client openssh-sftp-server procps rsync
 EOF
 
 test -f debian10.sif \
