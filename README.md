@@ -172,7 +172,7 @@ scp -d -F ssh-config /bin/bash vagrant@ssh-container:/tmp
 rsync -e 'ssh -F ssh-config' /bin/bash vagrant@ssh-container:/tmp
 rsync -e 'ssh -F ssh-config' vagrant@ssh-container:/bin/bash /tmp
 sftp -F ssh-config vagrant@ssh-container:/bin/bash /tmp
-sftp -F ssh-config /bin/bash vagrant@ssh-container:/tmp
+sftp -F ssh-config vagrant@ssh-container:/tmp <<< $'put /bin/bash'
 ```
 
 _Note that the container images require to have corresponding packages

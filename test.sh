@@ -43,7 +43,7 @@ rsync -v -e "ssh -F ssh-config -p $port" \
 sftp -F ssh-config -P $port \
         vagrant@ssh-container:/bin/bash /tmp
 sftp -F ssh-config -P $port \
-        /bin/bash vagrant@ssh-container:/tmp
+        vagrant@ssh-container:/tmp <<< $'put /bin/bash'
 
 ##
 # specific container
