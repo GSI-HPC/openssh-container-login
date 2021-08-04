@@ -88,6 +88,8 @@ Name                        | Description
 
 ## Usage
 
+Usage of the `SINGULARITY_CONTAINER` environment variable:
+
 Variable                        | Description
 --------------------------------|---------------------------------------
 `SINGULARITY_CONTAINER=`        | Unset, empty of blank will launch the default container defined in `SSHD_CONTAINER_DEFAULT`.
