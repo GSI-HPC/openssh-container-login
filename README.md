@@ -1,11 +1,10 @@
 # OpenSSH Container Login
 
-This example uses [Singularity][03] as container runtime. However this 
-approach should be applicable to other container runtimes as well. Users
-specify an environment variable `SINGULARITY_CONTAINER` before executing
-`ssh` login in order to select a container on the login node. `sshd` 
-executes a custom script to then launch the requested container as login
-environment.
+This example uses [Singularity][03] as container runtime. However this approach
+should be applicable to other container runtimes as well. **Users may specify
+an environment variable `SINGULARITY_CONTAINER` before executing `ssh` login in
+order to select a container on the login node.** `sshd` executes a custom
+script to then launch the requested container as login environment.
 
 From the `sshd_config` manual:
 
