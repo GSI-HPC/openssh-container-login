@@ -63,7 +63,7 @@ Start `sshd` on port 23 in foreground for debugging:
 
 ```bash
 # start a second instance of sshd in foreground on port 23
-vagrant ssh -- sudo /sbin/sshd -d -p 23
+vagrant ssh -- sudo /sbin/sshd -o LogLevel=DEBUG3 -De -p 23
 # connect via the forwarding port...
 vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
@@ -74,6 +74,9 @@ Alternatively restart `sshd.service` to run on the default port 22:
 ```bash
 vagrant ssh -- sudo systemctl restart sshd.service
 ```
+
+Note that this will influence `vagrant ssh` login and may make it difficult to
+debug any issue with SSH login.
 
 ## Configuration
 
@@ -116,6 +119,9 @@ UID        PID  PPID  C STIME TTY          TIME CMD
 vagrant   2832  2829  0 06:01 ?        00:00:00 sshd: vagrant@notty
 vagrant   2833  2832  0 06:01 ?        00:00:00   Singularity runtime parent
 vagrant   2854  2833  0 06:01 ?        00:00:00     /bin/ps -fH
+# test if stdin works as expected
+>>> echo 1 2 3 4 | ssh -F ssh-config vagrant@ssh-container -- cat
+1 2 3 4
 ```
 
 File transfer with `scp` and `rsync`:
