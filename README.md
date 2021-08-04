@@ -27,10 +27,10 @@ AcceptEnv SINGULARITY_CONTAINER
 ForceCommand /etc/ssh/sshd_container.sh
 ```
 
-`ForceCommand` executes the script [sshd_container.sh][02] to consume this
-environment variable, validates its input and launches a container during `ssh`
-login. Administrators customize the behavior of the login script via a
-default configuration file [sshd_container][01]:
+`ForceCommand` executes the script [sshd_container.sh][02] to consume
+`SINGULARITY_CONTAINER` environment variable, validates its input and launches
+a container during `ssh` login. Administrators customize the behavior of the
+login script via a default configuration file [sshd_container][01]:
 
 File                          | Description
 ------------------------------|-----------------------------------
