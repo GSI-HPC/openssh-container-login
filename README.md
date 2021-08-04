@@ -1,4 +1,4 @@
-# SSH Container Login
+# OpenSSH Container Login
 
 This example uses [Singularity][03] as container runtime. However this 
 approach should be applicable to other container runtimes as well. Users
@@ -7,9 +7,7 @@ specify an environment variable `SINGULARITY_CONTAINER` before executing
 executes a custom script to then launch the requested container as login
 environment.
 
-
 From the `sshd_config` manual:
-
 
 > **AcceptEnv**
 >
@@ -40,11 +38,11 @@ File                          | Description
 [sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
 
-
 ### Development
 
-Build two simple test singularity containers with [containers.sh](containers.sh).
-(This requires `singularity` installed on the host.)
+Build two singularity containers with the script [containers.sh](containers.sh).
+(This requires `singularity` installed on the host.). The are stored in
+`/tmp/{debian10,centos7}.sif` for testing the container login.
 
 Work on the login script using you localhost:
 
@@ -55,7 +53,11 @@ SSHD_CONTAINER_CONFIG=sshd_container \
         ./sshd_container.sh
 ```
 
-Bootstrap a test virtual machine using the included [Vagrantfile](Vagrantfile).
+Bootstrap a test virtual machine using the included [Vagrantfile](Vagrantfile):
+
+* Installs the `singularity` packages from Fedora EPEL
+* Deploys [sshd_container][01] and [sshd_container.sh][02]
+* Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
 
 Start `sshd` on port 23 in foreground for debugging:
 
@@ -67,8 +69,8 @@ vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
-Uncomment `systemctl restart sshd.service` in the [Vagrantfile](Vagrantfile) to
-run on the default port.
+Alternatively uncomment `systemctl restart sshd.service` in the
+[Vagrantfile](Vagrantfile) to run on the default port 22.
 
 ### Usage
 
@@ -125,7 +127,6 @@ Select: 2
 Container launched: /tmp/centos7.sif
 vagrant@centos7:~ >
 ```
-
 
 [01]: sshd_container
 [02]: sshd_container.sh
