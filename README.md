@@ -50,9 +50,9 @@ Name                        | Description
 
 Build two singularity containers with the script [containers.sh](containers.sh).
 (This requires `singularity` installed on the host). Containers are stored in
-`/tmp/{debian10,centos7}.sif` for testing login into a container.
+`/tmp/{debian10,centos7}.sif`.
 
-Work on the login script using you localhost:
+Work on the login script using your host:
 
 ```bash
 SSHD_CONTAINER_DEBUG=true \
@@ -105,9 +105,25 @@ _Note that `ssh-config` provides the default configuration from
 Vagrant to connect with SSH to the box. This file is generated
 in the Development section above._
 
-### Defaults
+From the `ssh_config` manual:
 
-By default `ssh` login launches a container specified with `SSHD_CONTAINER_DEFAULT`:
+> **SendEnv**
+>
+> Specifies what variables from the local environ(7) should be sent to the
+> server. Note that environment passing is only supported for protocol 2. The
+> server must also support it, and the server must be configured to accept
+> these environment variables. Refer to `AcceptEnv` in sshd_config(5) for how
+> to configure the server. Variables are specified by name, which may contain
+> wildcard characters. Multiple environment variables may be separated by
+> whitespace or spread across multiple `SendEnv` directives. The default is not
+> to send any environment variables.
+
+```bash
+# append to configuration the client SSH configuration provided by Vagrant
+echo "  SendEnv=SINGULARITY_CONTAINER" >> ssh-config
+```
+
+**By default login launches a container** specified with `SSHD_CONTAINER_DEFAULT`:
 
 ```bash
 # login into a containerized interactive shell
@@ -134,9 +150,7 @@ rsync -e 'ssh -F ssh-config' /bin/bash vagrant@ssh-container:/tmp
 rsync -e 'ssh -F ssh-config' vagrant@ssh-container:/bin/bash /tmp
 ```
 
-### Specific Container
-
-Users can specify a specific container with the variable `SINGULARITY_CONTAINER`:
+Users can specify **a specific container** with the variable `SINGULARITY_CONTAINER`:
 
 ```bash
 >>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
@@ -145,23 +159,7 @@ Container launched: /tmp/centos7.sif
 vagrant@centos7:~ > 
 ```
 
-From the `ssh_config` manual:
-
-> **SendEnv**
->
-> Specifies what variables from the local environ(7) should be sent to the
-> server. Note that environment passing is only supported for protocol 2. The
-> server must also support it, and the server must be configured to accept
-> these environment variables. Refer to `AcceptEnv` in sshd_config(5) for how
-> to configure the server. Variables are specified by name, which may contain
-> wildcard characters. Multiple environment variables may be separated by
-> whitespace or spread across multiple `SendEnv` directives. The default is not
-> to send any environment variables.
-
-### No Container
-
-Use `none` to prevent any container from launch and drop the user into a
-shell running on the host environment:
+Login into the **host environment** using `SINGULARITY_CONTAINER=none`:
 
 ```bash
 # append to configuration the client SSH configuration
@@ -170,10 +168,8 @@ shell running on the host environment:
 [vagrant@centos7 ~]$
 ```
 
-### Container Menu
-
-`menu` will present a list of available containers defined in the
-[sshd_container][01] configuration:
+`SINGULARITY_CONTAINERmenu` will present a list of available containers defined
+in the [sshd_container][01] configuration:
 
 ```bash
 >>> SINGULARITY_CONTAINER=menu ssh -F ssh-config vagrant@ssh-container
