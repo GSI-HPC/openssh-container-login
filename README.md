@@ -27,8 +27,8 @@ AcceptEnv SINGULARITY_CONTAINER
 ForceCommand /etc/ssh/sshd_container.sh
 ```
 
-`ForceCommand` executes the script [sshd_container.sh][02] to consume
-`SINGULARITY_CONTAINER` environment variable, validates its input and launches
+`ForceCommand` executes the script [sshd_container.sh][02] which reads the
+`SINGULARITY_CONTAINER` environment variable, validates the input and launches
 a container during `ssh` login. Administrators customize the behavior of the
 login script via a default configuration file [sshd_container][01]:
 
@@ -36,6 +36,15 @@ File                          | Description
 ------------------------------|-----------------------------------
 [sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
+
+Variables in the [sshd_container][01] configuration file:
+
+Name                        | Description
+----------------------------|-------------------------------------
+`SSHD_CONTAINER_DEFAULT`    | Default container to start unless the users passes the environment variable `SINGULARITY_CONTAINER` at login.
+`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container launch for example `--bind=/srv`.
+`SSHD_CONTAINER_MENU`       | List of containers presented to the user for selection when requesting a menu with `SINGUALRITY_CONTAINER=menu`.
+
 
 ## Development
 
@@ -80,17 +89,6 @@ debug any issue with SSH login._
 
 The [test.sh](test.sh) script runs `ssh`, `scp`, `rsync` and `sftp` commands
 against the vagrant box for testing various command configurations.
-
-## Configuration
-
-Variables in the [sshd_container][01] configuration file:
-
-Name                        | Description
-----------------------------|-------------------------------------
-`SSHD_CONTAINER_DEFAULT`    | Default container to start unless the users passes the environment variable `SINGULARITY_CONTAINER` at login.
-`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container launch for example `--bind=/srv`.
-`SSHD_CONTAINER_MENU`       | List of containers presented to the user for selection when requesting a menu with `SINGUALRITY_CONTAINER=menu`.
-
 
 ## Usage
 
