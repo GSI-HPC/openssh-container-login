@@ -69,10 +69,6 @@ vagrant ssh-config > ssh-config
 ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
-_Note that `ssh-config` provides the default configuration from
-Vagrant to connect with SSH to the box. Examples in the Usage
-section require this file for the `ssh`, `scp` and `rsync` commands._
-
 Alternatively restart `sshd.service` to run on the default port 22:
 
 ```bash
@@ -91,6 +87,11 @@ Name                        | Description
 
 
 ## Usage
+
+_Note that `ssh-config` provides the default configuration from
+Vagrant to connect with SSH to the box. This file is generated
+in the Development section above._
+
 
 By **default `ssh` login launches a container specified with
 `SSHD_CONTAINER_DEFAULT`**:
