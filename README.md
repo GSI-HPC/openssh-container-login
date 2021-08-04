@@ -11,6 +11,8 @@ Note that this implementation uses [Singularity][03] as container run-time.
 However this approach should be applicable to other container run-time systems
 as well (for example [Podman][04]). 
 
+## Configuration
+
 Configure the OpenSSH daemon to accept `SINGULARITY_CONTAINER` as input
 environment with the configuration option `AcceptEnv` (from the
 `sshd_config` manual):
