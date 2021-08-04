@@ -168,7 +168,7 @@ Login into the **host environment** using `SINGULARITY_CONTAINER=none`:
 [vagrant@centos7 ~]$
 ```
 
-`SINGULARITY_CONTAINERmenu` will present a list of available containers defined
+`SINGULARITY_CONTAINER=menu` will present a **list of available containers** defined
 in the [sshd_container][01] configuration:
 
 ```bash
