@@ -123,9 +123,6 @@ Variable                        | Description
 `SINGULARITY_CONTAINER=none`    | No container is launched, effective login into the host environment
 `SINGULARITY_CONTAINER=menu`    | Present the user a selection menu with a list of container specified in `SSHD_CONTAINER_MENU`
 
-_Note that `ssh-config` provides the default configuration from
-Vagrant to connect with SSH to the box. This file is generated
-in the Development section above._
 
 Users need to make sure to **propagate the `SINGULARITY_CONTAINER` environment
 variable to the server** using the `SendEnv` configuration option (From the
@@ -141,6 +138,10 @@ variable to the server** using the `SendEnv` configuration option (From the
 > wildcard characters. Multiple environment variables may be separated by
 > whitespace or spread across multiple `SendEnv` directives. The default is not
 > to send any environment variables.
+
+_Note that `ssh-config` provides the default configuration from
+Vagrant to connect with SSH to the box. This file is generated
+in the Development section above._
 
 Adjust the `ssh-config` for the following example accordingly:
 
