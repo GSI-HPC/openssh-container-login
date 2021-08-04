@@ -144,6 +144,8 @@ using the `SendEnv` configuration option (From the `ssh_config` manual):
 ```bash
 # append to configuration the client SSH configuration provided by Vagrant
 echo "  SendEnv=SINGULARITY_CONTAINER" >> ssh-config
+# change the SSH forwarding port...
+sed -i 's/2222/2223/' ssh-config
 ```
 
 **By default login launches a container** specified with `SSHD_CONTAINER_DEFAULT`:
