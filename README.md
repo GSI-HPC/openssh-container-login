@@ -38,7 +38,7 @@ File                          | Description
 [sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
 
-### Development
+## Development
 
 Build two singularity containers with the script [containers.sh](containers.sh).
 (This requires `singularity` installed on the host). Containers are stored in
@@ -70,8 +70,8 @@ ssh -F ssh-config -p 2223 vagrant@ssh-container
 ```
 
 _Note that `ssh-config` provides the default configuration from
-Vagrant to connect with SSH to the box. Examples in the following
-section will use this file for the `ssh`, `scp` and `rsync` commands._
+Vagrant to connect with SSH to the box. Examples in the Usage
+section require this file for the `ssh`, `scp` and `rsync` commands._
 
 Alternatively restart `sshd.service` to run on the default port 22:
 
@@ -79,7 +79,18 @@ Alternatively restart `sshd.service` to run on the default port 22:
 vagrant ssh -- sudo systemctl restart sshd.service
 ```
 
-### Usage
+## Configuration
+
+Variables in the [sshd_container][01] configuration file:
+
+Name                        | Description
+----------------------------|-------------------------------------
+`SSHD_CONTAINER_DEFAULT`    | Default container to start unless the users passes the environment variable `SINGULARITY_CONTAINER` at login
+`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command, i.e. `--bind=/srv`
+`SSHD_CONTAINER_MENU`       | Items presented the the user for selection when requested by variable `SINGUALRITY_CONTAINER=menu`
+
+
+## Usage
 
 By **default `ssh` login launches a container specified with
 `SSHD_CONTAINER_DEFAULT`**:
