@@ -88,6 +88,13 @@ Name                        | Description
 
 ## Usage
 
+Variable                        | Description
+--------------------------------|---------------------------------------
+`SINGULARITY_CONTAINER=`        | Unset, empty of blank will launch the default container defined in `SSHD_CONTAINER_DEFAULT`.
+`SINGULARITY_CONTAINER=${path}` | Launches a container specified by a user.
+`SINGULARITY_CONTAINER=none`    | No container is launched, effective login into the host environment
+`SINGULARITY_CONTAINER=menu`    | Present the user a selection menu with a list of container specified in `SSHD_CONTAINER_MENU`
+
 _Note that `ssh-config` provides the default configuration from
 Vagrant to connect with SSH to the box. This file is generated
 in the Development section above._
