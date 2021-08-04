@@ -10,11 +10,24 @@ set -e
 # default container
 #
 
-unset SINGULARITY_CONTAINER
-
+# blank environment variable
+export SINGULARITY_CONTAINER=''
 ssh -F ssh-config -p $port vagrant@ssh-container \
         -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
-echo 0 | ssh -F ssh-config -p $port vagrant@ssh-container \
+
+# empty environment variable
+export SINGULARITY_CONTAINER=
+ssh -F ssh-config -p $port vagrant@ssh-container \
+        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+
+# no environment variable
+unset SINGULARITY_CONTAINER
+ssh -F ssh-config -p $port vagrant@ssh-container \
+        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+
+# standard input stream
+echo 'text from stdin' |\
+ssh -F ssh-config -p $port vagrant@ssh-container \
         -- cat
 
 scp -d -F ssh-config -P $port \
@@ -39,7 +52,8 @@ export SINGULARITY_CONTAINER=/tmp/centos7.sif
 ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
         -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
 
-echo 0 | ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
+echo 'text from stdin' |\
+ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
         -- cat
 
 scp -d -F ssh-config -P $port -o SendEnv=SINGULARITY_CONTAINER \
@@ -60,5 +74,7 @@ export SINGULARITY_CONTAINER=none
 
 ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
         -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
-echo 0 | ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
+
+echo 'text from stdin' |\
+ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
         -- cat
