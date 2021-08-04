@@ -51,21 +51,23 @@ sftp -F ssh-config -P $port \
 
 export SINGULARITY_CONTAINER=/tmp/centos7.sif
 
-ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
+ssh_options='-F ssh-config -o SendEnv=SINGULARITY_CONTAINER'
+
+ssh $ssh_options -p $port vagrant@ssh-container \
         -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
 
 echo 'text from stdin' |\
-ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
+ssh $ssh_options -p $port vagrant@ssh-container \
         -- cat
 
-scp -d -F ssh-config -P $port -o SendEnv=SINGULARITY_CONTAINER \
+scp -d $ssh_options -P $port \
         vagrant@ssh-container:/bin/bash /tmp
-scp -d -F ssh-config -P $port -o SendEnv=SINGULARITY_CONTAINER \
+scp -d $ssh_options -P $port \
         /bin/bash vagrant@ssh-container:/tmp
 
-rsync -v -e "ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER" \
+rsync -v -e "ssh $ssh_options -p $port" \
         /bin/bash vagrant@ssh-container:/tmp
-rsync -v -e "ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER" \
+rsync -v -e "ssh $ssh_options -p $port" \
         vagrant@ssh-container:/bin/bash /tmp
 
 ##
@@ -74,9 +76,9 @@ rsync -v -e "ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER" \
 
 export SINGULARITY_CONTAINER=none
 
-ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
+ssh $ssh_options -p $port vagrant@ssh-container \
         -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
 
 echo 'text from stdin' |\
-ssh -F ssh-config -p $port -o SendEnv=SINGULARITY_CONTAINER vagrant@ssh-container \
+ssh $ssh_options -p $port vagrant@ssh-container \
         -- cat

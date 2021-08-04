@@ -20,7 +20,7 @@ cat > centos7.def <<EOF
 Bootstrap: docker
 From: centos:7
 %post
-  yum install -y zsh openssh-client procps-ng rsync
+  yum install -y zsh openssh-clients procps-ng rsync
 EOF
 
 test -f centos7.sif \
