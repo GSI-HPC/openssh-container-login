@@ -75,8 +75,11 @@ Alternatively restart `sshd.service` to run on the default port 22:
 vagrant ssh -- sudo systemctl restart sshd.service
 ```
 
-Note that this will influence `vagrant ssh` login and may make it difficult to
-debug any issue with SSH login.
+_Note that this will influence `vagrant ssh` login and may make it difficult to
+debug any issue with SSH login._
+
+The [test.sh](test.sh) script runs `ssh`, `scp`, `rsync` and `sftp` commands
+against the vagrant box for testing various command configurations.
 
 ## Configuration
 
