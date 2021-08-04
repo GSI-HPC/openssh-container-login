@@ -8,6 +8,9 @@ From: debian:10
 %post
   apt update -y
   apt install -y zsh openssh-client openssh-sftp-server procps rsync
+  # make this compatible to the host configuration on CentOS 7
+  mkdir -p /usr/libexec/openssh
+  ln -s /usr/lib/openssh/sftp-server /usr/libexec/openssh/sftp-server
 EOF
 
 test -f debian10.sif \
