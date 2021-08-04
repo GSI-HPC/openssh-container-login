@@ -125,7 +125,7 @@ Variable                        | Description
 
 
 Users need to make sure to **propagate the `SINGULARITY_CONTAINER` environment
-variable to the server** using the `SendEnv` configuration option (From the
+variable to the server** using the `SendEnv` configuration option (from the
 `ssh_config` manual):
 
 > **SendEnv**

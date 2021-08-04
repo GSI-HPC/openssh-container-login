@@ -70,6 +70,11 @@ rsync -v -e "ssh $ssh_options -p $port" \
 rsync -v -e "ssh $ssh_options -p $port" \
         vagrant@ssh-container:/bin/bash /tmp
 
+sftp $ssh_options -P $port \
+        vagrant@ssh-container:/bin/bash /tmp
+sftp $ssh_options -P $port \
+        vagrant@ssh-container:/tmp <<< $'put /bin/bash'
+
 ##
 # no container
 #
