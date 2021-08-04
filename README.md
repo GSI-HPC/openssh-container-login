@@ -127,8 +127,9 @@ _Note that `ssh-config` provides the default configuration from
 Vagrant to connect with SSH to the box. This file is generated
 in the Development section above._
 
-Users need to make sure to propagate the `SINGULARITY_CONTAINER` to the server
-using the `SendEnv` configuration option (From the `ssh_config` manual):
+Users need to make sure to **propagate the `SINGULARITY_CONTAINER` environment
+variable to the server** using the `SendEnv` configuration option (From the
+`ssh_config` manual):
 
 > **SendEnv**
 >
@@ -141,10 +142,12 @@ using the `SendEnv` configuration option (From the `ssh_config` manual):
 > whitespace or spread across multiple `SendEnv` directives. The default is not
 > to send any environment variables.
 
+Adjust the `ssh-config` for the following example accordingly:
+
 ```bash
-# append to configuration the client SSH configuration provided by Vagrant
+# propagete SINGULARITY_CONTAINER to the server
 echo "  SendEnv=SINGULARITY_CONTAINER" >> ssh-config
-# change the SSH forwarding port...
+# change the SSH forwarding port (cf. Vagrantfile)
 sed -i 's/2222/2223/' ssh-config
 ```
 
