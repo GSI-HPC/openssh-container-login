@@ -58,7 +58,7 @@ a container during `ssh` login.
 > internal-sftp will force the use of an in-process SFTP server that requires
 > no support files when used with `ChrootDirectory`. The default is none.
 
-Administrators customize the behavior of the login script via the configuration
+Customize the behavior of the login script via the configuration
 file [sshd_container][01]:
 
 Variable                    | Description
@@ -127,7 +127,8 @@ _Note that `ssh-config` provides the default configuration from
 Vagrant to connect with SSH to the box. This file is generated
 in the Development section above._
 
-From the `ssh_config` manual:
+Users need to make sure to propagate the `SINGULARITY_CONTAINER` to the server
+using the `SendEnv` configuration option (From the `ssh_config` manual):
 
 > **SendEnv**
 >
