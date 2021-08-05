@@ -98,7 +98,7 @@ vagrant up centos7-test
 vagrant ssh centos7-test -- sudo /sbin/sshd -o LogLevel=DEBUG -De -p 23
 # connect via the forwarding port (cf. Vagrantfile)
 vagrant ssh-config centos7-test > ssh-config
-ssh -F ssh-config -p 2223 vagrant@ssh-container
+ssh -F ssh-config -p 2223 vagrant@centos7-test
 ```
 
 Alternatively restart `sshd.service` to run on the default port 22:
