@@ -39,6 +39,8 @@ else
         _debug "$SSHD_CONTAINER_CONFIG configuration file missing"
 fi
 
+_debug "User defined SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER"
+
 # Login to the root account...
 #
 if [ "$USER" == "root" ]
@@ -80,7 +82,7 @@ case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
                 fi
                 ;;
 esac
-_debug SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER
+_debug "Using container SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER"
 
 
 # Present a menu if requested by the user...
@@ -106,11 +108,11 @@ if [ "$SINGULARITY_CONTAINER" == "none" ]
 then
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
-                _debug "User command line $SSH_ORIGINAL_COMMAND"
+                _debug "User command line ## $SSH_ORIGINAL_COMMAND"
                 exec $shell -l -c "$SSH_ORIGINAL_COMMAND"
         else
                 # print the login banner
-                cat /etc/motd
+                test -f /etc/motd && cat /etc/motd
                 exec $shell -l
         fi
 
@@ -119,7 +121,7 @@ then
 else
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
-                _debug "User command line $SSH_ORIGINAL_COMMAND"
+                _debug "User command line ## $SSH_ORIGINAL_COMMAND"
                 exec singularity exec \
                      $SSHD_CONTAINER_OPTIONS \
                      $SINGULARITY_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
@@ -128,7 +130,7 @@ else
                 # define a prompt for Bash users
                 export SINGULARITYENV_PS1="\u@\h:\w > "
                 # print the login banner
-                cat /etc/motd
+                test -f /etc/motd && cat /etc/motd
                 echo Container launched: $(realpath $SINGULARITY_CONTAINER)
                 exec singularity exec \
                      $SSHD_CONTAINER_OPTIONS \
