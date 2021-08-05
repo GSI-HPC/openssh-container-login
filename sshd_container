@@ -11,5 +11,6 @@ export SSHD_CONTAINER_DEFAULT=/tmp/debian10.sif
 declare -a SSHD_CONTAINER_MENU=(
         /tmp/debian10.sif
         /tmp/centos7.sif
+        /tmp/centos_stream8.sif
         none
 )
