@@ -80,7 +80,7 @@ Work on the login script using your host:
 SSHD_CONTAINER_DEBUG=true \
 SINGULARITY_CONTAINER=menu \
 SSHD_CONTAINER_CONFIG=sshd_container \
-        bash ./sshd_container.sh
+        bash -x ./sshd_container.sh
 ```
 
 Bootstrap a test virtual machine using the included [Vagrantfile](Vagrantfile):

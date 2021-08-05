@@ -6,44 +6,36 @@ port=2223
 set -x
 set -e
 
+command='grep -i pretty /etc/os-release ; ps -p $(echo $PPID) -f --no-headers'
+
+
+# root login does not launch a container
+export SINGULARITY_CONTAINER='foo'
+ssh -F ssh-config -p $port root@ssh-container -- "$command"
+
 ##
 # default container
 #
 
-# blank environment variable
-export SINGULARITY_CONTAINER=''
-ssh -F ssh-config -p $port vagrant@ssh-container \
-        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+export SINGULARITY_CONTAINER='' # blank environment variable
+ssh -F ssh-config -p $port vagrant@ssh-container -- "$command"
 
-# empty environment variable
-export SINGULARITY_CONTAINER=
-ssh -F ssh-config -p $port vagrant@ssh-container \
-        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+export SINGULARITY_CONTAINER=   # empty environment variable
+ssh -F ssh-config -p $port vagrant@ssh-container -- "$command"
 
-# no environment variable
-unset SINGULARITY_CONTAINER
-ssh -F ssh-config -p $port vagrant@ssh-container \
-        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+unset SINGULARITY_CONTAINER     # no environment variable
+ssh -F ssh-config -p $port vagrant@ssh-container -- "$command"
 
-# standard input stream
-echo 'text from stdin' |\
-ssh -F ssh-config -p $port vagrant@ssh-container \
-        -- cat
+echo 0 | ssh -F ssh-config -p $port vagrant@ssh-container -- cat
 
-scp -d -F ssh-config -P $port \
-        vagrant@ssh-container:/bin/bash /tmp
-scp -d -F ssh-config -P $port \
-        /bin/bash vagrant@ssh-container:/tmp
+scp -d -F ssh-config -P $port vagrant@ssh-container:/bin/bash /tmp
+scp -d -F ssh-config -P $port /bin/bash vagrant@ssh-container:/tmp
 
-rsync -v -e "ssh -F ssh-config -p $port" \
-        /bin/bash vagrant@ssh-container:/tmp
-rsync -v -e "ssh -F ssh-config -p $port" \
-        vagrant@ssh-container:/bin/bash /tmp
+rsync -v -e "ssh -F ssh-config -p $port" /bin/bash vagrant@ssh-container:/tmp
+rsync -v -e "ssh -F ssh-config -p $port" vagrant@ssh-container:/bin/bash /tmp
 
-sftp -F ssh-config -P $port \
-        vagrant@ssh-container:/bin/bash /tmp
-sftp -F ssh-config -P $port \
-        vagrant@ssh-container:/tmp <<< $'put /bin/bash'
+sftp -F ssh-config -P $port vagrant@ssh-container:/bin/bash /tmp
+sftp -F ssh-config -P $port vagrant@ssh-container:/tmp <<< $'put /bin/bash'
 
 ##
 # specific container
@@ -53,27 +45,18 @@ export SINGULARITY_CONTAINER=/tmp/centos7.sif
 
 ssh_options='-F ssh-config -o SendEnv=SINGULARITY_CONTAINER'
 
-ssh $ssh_options -p $port vagrant@ssh-container \
-        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+ssh $ssh_options -p $port vagrant@ssh-container -- "$command"
 
-echo 'text from stdin' |\
-ssh $ssh_options -p $port vagrant@ssh-container \
-        -- cat
+echo 0 | ssh $ssh_options -p $port vagrant@ssh-container -- cat
 
-scp -d $ssh_options -P $port \
-        vagrant@ssh-container:/bin/bash /tmp
-scp -d $ssh_options -P $port \
-        /bin/bash vagrant@ssh-container:/tmp
+scp -d $ssh_options -P $port vagrant@ssh-container:/bin/bash /tmp
+scp -d $ssh_options -P $port /bin/bash vagrant@ssh-container:/tmp
 
-rsync -v -e "ssh $ssh_options -p $port" \
-        /bin/bash vagrant@ssh-container:/tmp
-rsync -v -e "ssh $ssh_options -p $port" \
-        vagrant@ssh-container:/bin/bash /tmp
+rsync -v -e "ssh $ssh_options -p $port" /bin/bash vagrant@ssh-container:/tmp
+rsync -v -e "ssh $ssh_options -p $port" vagrant@ssh-container:/bin/bash /tmp
 
-sftp $ssh_options -P $port \
-        vagrant@ssh-container:/bin/bash /tmp
-sftp $ssh_options -P $port \
-        vagrant@ssh-container:/tmp <<< $'put /bin/bash'
+sftp $ssh_options -P $port vagrant@ssh-container:/bin/bash /tmp
+sftp $ssh_options -P $port vagrant@ssh-container:/tmp <<< $'put /bin/bash'
 
 ##
 # no container
@@ -81,9 +64,6 @@ sftp $ssh_options -P $port \
 
 export SINGULARITY_CONTAINER=none
 
-ssh $ssh_options -p $port vagrant@ssh-container \
-        -- 'grep -i pretty /etc/os-release ; ps -u $USER -fH'
+ssh $ssh_options -p $port vagrant@ssh-container -- "$command"
 
-echo 'text from stdin' |\
-ssh $ssh_options -p $port vagrant@ssh-container \
-        -- cat
+echo 0 | ssh $ssh_options -p $port vagrant@ssh-container -- cat

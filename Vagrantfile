@@ -2,6 +2,7 @@
 # vi: set ft=ruby :
 
 sshd_config = %q(
+PermitRootLogin yes
 AcceptEnv SINGULARITY_CONTAINER
 ForceCommand /etc/ssh/sshd_container.sh
 )
@@ -39,6 +40,10 @@ Vagrant.configure('2') do |config|
         cp -v /tmp/sshd_container /etc/default/sshd_container
         cp -v /tmp/sshd_container.sh /etc/ssh/sshd_container.sh
         grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
+        mkdir ~root/.ssh
+        chmod 700 ~root/.ssh
+        cat ~vagrant/.ssh/authorized_keys >> ~root/.ssh/authorized_keys
+        chmod 600 ~root/.ssh/authorized_keys
       )
     end
   end

@@ -39,6 +39,14 @@ else
         _debug "$SSHD_CONTAINER_CONFIG configuration file missing"
 fi
 
+# Login to the root account...
+#
+if [ "$USER" == "root" ]
+then
+        # ...without launching a container
+        SINGULARITY_CONTAINER=none
+fi
+
 # Process the SINGULARITY_CONTAINER environment variable
 #
 case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
