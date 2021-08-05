@@ -72,7 +72,7 @@ Variable                    | Description
 
 Build two singularity containers with the script [containers.sh](containers.sh).
 (This requires `singularity` installed on the host). Containers are stored in
-`/tmp/{debian10,centos7}.sif`.
+`/tmp/*.sif`.
 
 Work on the login script using your host:
 
