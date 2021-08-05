@@ -48,4 +48,24 @@ Vagrant.configure('2') do |config|
       )
     end
   end
+  
+  config.vm.define "centos7-package" do |config|
+
+    config.vm.hostname = "centos7"
+    config.vm.box = "centos/7"
+
+    config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+
+    config.vm.provision "shell" do |s|
+      s.privileged = true
+      s.inline = %Q(
+        yum install -y vim rpm-build rpmdevtools
+        rpmdev-setuptree
+        cp /vagrant/sshd_container.sh ~/rpmbuild/BUILD
+#        rpmbuild -ba openssh-container-login.spec
+      )
+    end
+
+  end
+
 end
