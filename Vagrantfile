@@ -8,7 +8,11 @@ ForceCommand /etc/ssh/sshd_container.sh
 )
 
 Vagrant.configure('2') do |config|
-  config.vm.define "ssh-container" do |config|
+
+  ##
+  # CentOS 7 environment for development and testing
+  #
+  config.vm.define "centos7-test" do |config|
 
     config.vm.hostname = "centos7"
     config.vm.box = "centos/7"
@@ -48,7 +52,10 @@ Vagrant.configure('2') do |config|
       )
     end
   end
-  
+ 
+  ##
+  # CentOS 7 environment to build and RPM package from the includes RPM Spec file
+  #
   config.vm.define "centos7-package" do |config|
 
     config.vm.hostname = "centos7"
@@ -62,7 +69,7 @@ Vagrant.configure('2') do |config|
         yum install -y vim rpm-build rpmdevtools
         rpmdev-setuptree
         cp /vagrant/sshd_container.sh ~/rpmbuild/BUILD
-#        rpmbuild -ba openssh-container-login.spec
+        rpmbuild -ba /vagrant/openssh-container-login.spec
       )
     end
 
