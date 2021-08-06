@@ -19,8 +19,8 @@ File                          | Description
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
 
 Copy the configuration file [sshd_container][01] and the
-[sshd_container.sh][02] script to the expected default locations. Add following
-lines to `/etc/ssh/sshd_config`and restart `sshd`:
+[sshd_container.sh][02] login script to the expected default locations. Add
+following lines to `/etc/ssh/sshd_config`and restart `sshd`:
 
 ```bash
 AcceptEnv SINGULARITY_CONTAINER
@@ -34,11 +34,11 @@ environment variable using the configuration option `AcceptEnv` (from the
 > **AcceptEnv**
 >
 > Specifies what environment variables sent by the client will be copied into
-> the session's environ(7). See SendEnv in ssh_config(5) for how to configure
+> the session's environ(7). See `SendEnv` in ssh_config(5) for how to configure
 > the client. Note that environment passing is only supported for protocol 2.
 > Variables are specified by name, which may contain the wildcard characters
 > `*` and `?`. Multiple environment variables may be separated by whitespace or
-> spread across multiple AcceptEnv directives. Be warned that some environment
+> spread across multiple `AcceptEnv` directives. Be warned that some environment
 > variables could be used to bypass restricted user environments. For this
 > reason, care should be taken in the use of this directive. The default is not
 > to accept any environment variables.
@@ -65,12 +65,13 @@ file [sshd_container][01]:
 Variable                    | Description
 ----------------------------|-------------------------------------
 `SSHD_CONTAINER_DEFAULT`    | Default container to start unless the user passes the environment variable `SINGULARITY_CONTAINER` at login.
-`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container launch. For example `--bind=/srv`.
+`SSHD_CONTAINER_OPTIONS`    | Command-line options appended to the `singularity` command at container launch. For example `--bind=/srv`, reference the [Singularity][03] admin manual for more details.
 `SSHD_CONTAINER_MENU`       | List of containers presented to the user for selection when requesting a menu with `SINGUALRITY_CONTAINER=menu`.
 
 ## Usage
 
-Usage of the `SINGULARITY_CONTAINER` environment variable:
+Usage of the `SINGULARITY_CONTAINER` environment variable in the shell
+environment on the `ssh` client:
 
 Variable                        | Description
 --------------------------------|---------------------------------------
@@ -95,9 +96,13 @@ variable to the server** using the `SendEnv` configuration option (from the
 > whitespace or spread across multiple `SendEnv` directives. The default is not
 > to send any environment variables.
 
-Note tat the `root` account will always default to `SINGULARITY_CONTAINER=none`.
-This grantees administrative access to a node. This is particularly imported if
-there is only a single `sshd` instance running on the node.
+Note tat the `root` account will always default to
+`SINGULARITY_CONTAINER=none`.  This grantees administrative access to a node.
+This is particularly imported if there is only a single `sshd` instance running
+on the node. Either use the SSH client option `-o
+SendEnv=SINGULARITY_CONTAINER` or append this configuration an SSH per-user
+configuration file in `~/.ssh/config` or the per-user configuration file
+in `/etc/ssh/ssh_config`.
 
 ## Development & Testing
 
