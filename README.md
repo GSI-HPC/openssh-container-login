@@ -233,11 +233,11 @@ vagrant@centos7:~ >
 This repository includes an RPM Spec file [`openssh-container-login.spec`][07]
 used to build an RPM package as described in the [RPM Packaging Guide][06].
 
-Start the package build the in included [`Vagrantfile`][08].
+Start the package build with the included [`Vagrantfile`][08]:
 
-* Installs the RPM build tool chain
-* Build the RPM package in `~root/rpmbuild`
-* Installs the RPM package
+* Installs the RPM development tools
+* Build the RPM package in `~root/rpmbuild/`
+* Installs the RPM package in the box
 * Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
 
 ```bash
