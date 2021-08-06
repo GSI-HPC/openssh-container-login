@@ -63,13 +63,23 @@ Vagrant.configure('2') do |config|
 
     config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
 
+    # build the RPM package
     config.vm.provision "shell" do |s|
       s.privileged = true
-      s.inline = %Q(
+      s.inline = %q(
         yum install -y vim rpm-build rpmdevtools
         rpmdev-setuptree
         cp /vagrant/sshd_container.sh ~/rpmbuild/BUILD
         rpmbuild -ba /vagrant/openssh-container-login.spec
+      )
+    end
+    
+    # install the package, and configure sshd
+    config.vm.provision "shell" do |s|
+      s.privileged = true
+      s.inline = %Q(
+        rpm -i $(find ~/rpmbuild/* -name *.rpm)
+        grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
       )
     end
 

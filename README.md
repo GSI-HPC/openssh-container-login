@@ -231,9 +231,16 @@ vagrant@centos7:~ >
 ## Packaging
 
 This repository includes an RPM Spec file [`openssh-container-login.spec`][07]
-used to build an RPM package as described in the [RPM Packaging Guide][6]. The
-build environment is available in a Vagrant box `centos7-package` specified
-the in included [`Vagrantfile`][08].
+used to build an RPM package as described in the [RPM Packaging Guide][6].
+
+Start the package build the in included [`Vagrantfile`][08].
+
+* Install the RPM build tool chain
+* 
+
+```bash
+vagrant up centos7-package
+```
 
 [01]: sshd_container
 [02]: sshd_container.sh
