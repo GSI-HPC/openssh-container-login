@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-VERSION=0.1
+VERSION=1.0
 
 _debug() {
         if [ "$SSHD_CONTAINER_DEBUG" = "true" ]; then

@@ -1,5 +1,5 @@
 Name:           openssh-container-login
-Version:        0.1
+Version:        1.0
 Release:        0
 Summary:        Containerize OpenSSH Client Logins
 License:        GPLv3

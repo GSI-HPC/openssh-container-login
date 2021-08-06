@@ -101,7 +101,7 @@ Note tat the `root` account will always default to
 This is particularly imported if there is only a single `sshd` instance running
 on the node. Either use the SSH client option `-o
 SendEnv=SINGULARITY_CONTAINER` or append this configuration an SSH per-user
-configuration file in `~/.ssh/config` or the per-user configuration file
+configuration file in `~/.ssh/config` or the  system-wide configuration file
 in `/etc/ssh/ssh_config`.
 
 ## Development & Testing
@@ -228,8 +228,18 @@ Container launched: /tmp/centos7.sif
 vagrant@centos7:~ >
 ```
 
+## Packaging
+
+This repository includes an RPM Spec file [`openssh-container-login.spec`][07]
+used to build an RPM package as described in the [RPM Packaging Guide][6]. The
+build environment is available in a Vagrant box `centos7-package` specified
+the in included [`Vagrantfile`][08].
+
 [01]: sshd_container
 [02]: sshd_container.sh
 [03]: https://sylabs.io/singularity
 [04]: https://podman.io
 [05]: containers.sh
+[06]: https://rpm-packaging-guide.github.io
+[07]: openssh-container-login.spec
+[08]: Vagrantfile
