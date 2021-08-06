@@ -95,6 +95,10 @@ variable to the server** using the `SendEnv` configuration option (from the
 > whitespace or spread across multiple `SendEnv` directives. The default is not
 > to send any environment variables.
 
+Note tat the `root` account will always default to `SINGULARITY_CONTAINER=none`.
+This grantees administrative access to a node. This is particularly imported if
+there is only a single `sshd` instance running on the node.
+
 ## Development & Testing
 
 Build the required singularity containers with the script [containers.sh][05].
@@ -131,25 +135,24 @@ vagrant ssh-config centos7-test > ssh-config
 ssh -F ssh-config -p 2223 vagrant@centos7-test
 ```
 
-Alternatively restart `sshd.service` to run on the default port 22:
+`ssh-config` provides the default configuration from Vagrant to connect with
+SSH to the box. Either alter the configuration file or use the SSH option `-p`
+to connect with the **non default port 2223**. Alternatively restart
+`sshd.service` to run on the default port 22:
 
 ```bash
 vagrant ssh centos7-test -- sudo systemctl restart sshd.service
+# Note that this will influence `vagrant ssh` login and may make it difficult to
+# debug any issue with SSH login.
 ```
 
-_Note that this will influence `vagrant ssh` login and may make it difficult to
-debug any issue with SSH login._
-
 The [test.sh](test.sh) script runs `ssh`, `scp`, `rsync` and `sftp` commands
-against the vagrant box for testing various command configurations.
+against the vagrant box for testing various command configurations on multiple
+different containers.
 
-### Examples
-
-_Note that `ssh-config` provides the default configuration from
-Vagrant to connect with SSH to the box. This file is generated
-in the Development section above._
-
-Adjust the `ssh-config` for the following example accordingly:
+The reset of this section illustrates some examples for testing the
+functionality of the login script manually.  Adjust the `ssh-config` for the
+following example accordingly:
 
 ```bash
 # propagete SINGULARITY_CONTAINER to the server
@@ -158,7 +161,7 @@ echo "  SendEnv=SINGULARITY_CONTAINER" >> ssh-config
 sed -i 's/2222/2223/' ssh-config
 ```
 
-**By default login launches a container** specified with `SSHD_CONTAINER_DEFAULT`:
+By default login launches a container specified with `SSHD_CONTAINER_DEFAULT`:
 
 ```bash
 # login into a containerized interactive shell
@@ -188,9 +191,9 @@ sftp -F ssh-config vagrant@centos7-test:/tmp <<< $'put /bin/bash'
 ```
 
 _Note that the container images require to have corresponding packages
-installed cf. [containers.sh](containers.sh)_
+installed cf. [containers.sh][05]._
 
-Users can specify **a specific container** with the variable `SINGULARITY_CONTAINER`:
+Users can specify a specific container with the variable `SINGULARITY_CONTAINER`:
 
 ```bash
 >>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
@@ -199,14 +202,14 @@ Container launched: /tmp/centos7.sif
 vagrant@centos7:~ > 
 ```
 
-Login into the **host environment** using `SINGULARITY_CONTAINER=none`:
+Login into the host environment using `SINGULARITY_CONTAINER=none`:
 
 ```bash
 >>> SINGULARITY_CONTAINER=none ssh -F ssh-config vagrant@centos7-test
 [vagrant@centos7 ~]$
 ```
 
-`SINGULARITY_CONTAINER=menu` will present a **list of available containers** defined
+`SINGULARITY_CONTAINER=menu` will present a list of available containers defined
 in the [sshd_container][01] configuration:
 
 ```bash
