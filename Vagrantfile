@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+##
+# Configuration file for the `sshd` daemon
+#
 sshd_config = %q(
 PermitRootLogin yes
 AcceptEnv SINGULARITY_CONTAINER SSHD_CONTAINER_*
@@ -16,12 +19,17 @@ Vagrant.configure('2') do |config|
 
     config.vm.hostname = "centos7-test"
     config.vm.box = "centos/7"
+
+    # Disable sync of the development repository into the box
     config.vm.synced_folder ".", "/vagrant", disabled: true
 
-    # use this for a second sshd instance...
+    # Use this for a second `sshd` instance...
     config.vm.network "forwarded_port", host: 2223, guest: 23
 
-    # copy files into the box
+    # Copy files into the box
+    #
+    # - configuration file and login script
+    # - singularity container images
     config.vm.box_check_update = false
     %w(
       sshd_container
@@ -34,7 +42,12 @@ Vagrant.configure('2') do |config|
        config.vm.provision "file", source: "#{file}", destination: "/tmp/#{name}"
     end
 
-    # install dependencies and configured sshd
+    # Setup the development environment
+    #
+    # - install singularity
+    # - move the configuration file and login script to the default paths
+    # - configure `sshd` daemon
+    # - add the vagrant ssh key to the root account
     config.vm.provision "shell" do |s|
       s.privileged = true
       s.inline = %Q(
@@ -61,13 +74,13 @@ Vagrant.configure('2') do |config|
     config.vm.hostname = "centos7-package"
     config.vm.box = "centos/7"
 
-    # sync the development repository into the box
+    # Sync the development repository into the box
     config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
     
-    # use this for a second sshd instance...
+    # Use this for a second sshd instance...
     config.vm.network "forwarded_port", host: 2223, guest: 23
 
-    # build the RPM package
+    # Build the RPM package
     #
     # - install the RPM development tools
     # - copy the login script into the build environment
@@ -84,7 +97,7 @@ Vagrant.configure('2') do |config|
       )
     end
     
-    # install the package, and configure sshd
+    # Install the package, and configure sshd
     config.vm.provision "shell" do |s|
       s.privileged = true
       s.inline = %Q(
