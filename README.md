@@ -235,11 +235,20 @@ used to build an RPM package as described in the [RPM Packaging Guide][6].
 
 Start the package build the in included [`Vagrantfile`][08].
 
-* Install the RPM build tool chain
-* 
+* Installs the RPM build tool chain
+* Build the RPM package in `~root/rpmbuild`
+* Installs the RPM package
+* Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
 
 ```bash
 vagrant up centos7-package
+```
+
+Use the Vagrant [vagrant-rsync-back][09] plug-in to copy the RPM packages
+from the box into the development repository:
+
+```bash
+vagrant rsync-back centos7-package
 ```
 
 [01]: sshd_container
@@ -250,3 +259,4 @@ vagrant up centos7-package
 [06]: https://rpm-packaging-guide.github.io
 [07]: openssh-container-login.spec
 [08]: Vagrantfile
+[09]: https://github.com/smerrill/vagrant-rsync-back

@@ -14,7 +14,7 @@ Vagrant.configure('2') do |config|
   #
   config.vm.define "centos7-test" do |config|
 
-    config.vm.hostname = "centos7"
+    config.vm.hostname = "centos7-test"
     config.vm.box = "centos/7"
     config.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -58,19 +58,29 @@ Vagrant.configure('2') do |config|
   #
   config.vm.define "centos7-package" do |config|
 
-    config.vm.hostname = "centos7"
+    config.vm.hostname = "centos7-package"
     config.vm.box = "centos/7"
 
+    # sync the development repository into the box
     config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+    
+    # use this for a second sshd instance...
+    config.vm.network "forwarded_port", host: 2223, guest: 23
 
     # build the RPM package
+    #
+    # - install the RPM development tools
+    # - copy the login script into the build environment
+    # - build the package
+    # - copy the RPM packages from the build environment
     config.vm.provision "shell" do |s|
       s.privileged = true
       s.inline = %q(
         yum install -y vim rpm-build rpmdevtools
         rpmdev-setuptree
-        cp /vagrant/sshd_container.sh ~/rpmbuild/BUILD
+        cp -v /vagrant/sshd_container.sh ~/rpmbuild/BUILD
         rpmbuild -ba /vagrant/openssh-container-login.spec
+        cp -v $(find ~/rpmbuild/* -name *.rpm) /vagrant
       )
     end
     
@@ -78,7 +88,7 @@ Vagrant.configure('2') do |config|
     config.vm.provision "shell" do |s|
       s.privileged = true
       s.inline = %Q(
-        rpm -i $(find ~/rpmbuild/* -name *.rpm)
+        rpm -v -i $(find ~/rpmbuild/* -name *.rpm)
         grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
       )
     end
