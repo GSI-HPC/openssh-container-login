@@ -1,6 +1,6 @@
 # OpenSSH Container Login
 
-The [sshd_container.sh][02] script distributed in this repository is used in
+The [`sshd_container.sh`][02] script distributed in this repository is used in
 conjunction with the OpenSSH `sshd` daemon to launch a Linux container for each
 `ssh` login from a client. This containerizes the environment of user sessions
 by default. Users may specify an environment variable `SINGULARITY_CONTAINER`
@@ -18,8 +18,8 @@ File                          | Description
 [sshd_container][01]          | Configuration file (default path `/etc/default/sshd_container`)
 [sshd_container.sh][02]       | Login script (default path `/etc/ssh/sshd_container.sh`) 
 
-Copy the configuration file [sshd_container][01] and the
-[sshd_container.sh][02] login script to the expected default locations. Add
+Copy the configuration file [`sshd_container`][01] and the
+[`sshd_container.sh`][02] login script to the expected default locations. Add
 following lines to `/etc/ssh/sshd_config`and restart `sshd`:
 
 ```bash
@@ -44,7 +44,7 @@ environment variable using the configuration option `AcceptEnv` (from the
 > to accept any environment variables.
 
 
-`ForceCommand` executes the script [sshd_container.sh][02] which reads the
+`ForceCommand` executes the script [`sshd_container.sh`][02] which reads the
 `SINGULARITY_CONTAINER` environment variable, validates the input and launches
 a container during `ssh` login. 
 
@@ -60,7 +60,7 @@ a container during `ssh` login.
 > no support files when used with `ChrootDirectory`. The default is none.
 
 Customize the behavior of the login script via the configuration
-file [sshd_container][01]:
+file [`sshd_container`][01]:
 
 Variable                    | Description
 ----------------------------|-------------------------------------
@@ -196,7 +196,7 @@ sftp -F ssh-config vagrant@centos7-test:/tmp <<< $'put /bin/bash'
 ```
 
 _Note that the container images require to have corresponding packages
-installed cf. [containers.sh][05]._
+installed cf. [`containers.sh`][05]._
 
 Users can specify a specific container with the variable `SINGULARITY_CONTAINER`:
 
