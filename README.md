@@ -233,22 +233,35 @@ vagrant@centos7:~ >
 This repository includes an RPM Spec file [`openssh-container-login.spec`][07]
 used to build an RPM package as described in the [RPM Packaging Guide][06].
 
-Start the package build with the included [`Vagrantfile`][08]:
-
-* Installs the RPM development tools
-* Build the RPM package in `~root/rpmbuild/`
-* Installs the RPM package in the box
-* Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
+Start the package build in a Vagrant box specified in [`Vagrantfile`][08].
 
 ```bash
-vagrant up centos7-package
+vagrant up el8-package
+```
+
+```bash
+# synced with the host
+cd /vagrant
+# initilize the build environment
+rpmdev-setuptree
+# copy the login script into the build environment
+cp -v /vagrant/sshd_container.sh ~/rpmbuild/BUILD
+# build the package
+rpmbuild -ba /vagrant/openssh-container-login.spec
+# list files in the package
+rpm -vql ~/rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm
 ```
 
 Use the Vagrant [vagrant-rsync-back][09] plug-in to copy the RPM packages
 from the box into the development repository:
 
 ```bash
-vagrant rsync-back centos7-package
+# copy the packages into the working-directory
+cp ~/rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm /vagrant
+# install the plugin if required
+vagrant plugin install vagrant-rsync-back
+# download packages from the Vagrant box
+vagrant rsync-back el8-package
 ```
 
 [01]: sshd_container
