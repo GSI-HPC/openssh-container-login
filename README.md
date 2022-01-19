@@ -245,7 +245,7 @@ cd /vagrant
 # initilize the build environment
 rpmdev-setuptree
 # copy the login script into the build environment
-cp -v /vagrant/sshd_container.sh ~/rpmbuild/BUILD
+cp -v /vagrant/{LICENSE,README.md,sshd_container.sh} ~/rpmbuild/BUILD
 # build the package
 rpmbuild -ba /vagrant/openssh-container-login.spec
 # list files in the package

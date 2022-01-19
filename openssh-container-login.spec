@@ -28,11 +28,15 @@ EOF
 mkdir -p %{buildroot}/etc/ssh
 cp sshd_container.sh %{buildroot}/etc/ssh/sshd_container.sh
 
-
 %files
 /etc/default/sshd_container
 /etc/ssh/sshd_container.sh
+%license LICENSE
+%doc README.md
 
 %changelog
+* Wed Jan 19 2022 Victor Penso <vic.penso@gmail.com> 1.0
+  - Add LICENSE and README to the package
+  - Build package on Enterprise Linux 8
 * Fri Aug 6 2021 Victor Penso <vic.penso@gmail.com> 1.0
-  - First version to be packaged 
+  - First version to be packaged
