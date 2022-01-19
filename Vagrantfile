@@ -65,7 +65,7 @@ Vagrant.configure('2') do |config|
       )
     end
   end
- 
+
   ##
   # CentOS 7 environment to build and RPM package from the includes RPM Spec file
   #
@@ -96,7 +96,7 @@ Vagrant.configure('2') do |config|
         cp -v $(find ~/rpmbuild/* -name *.rpm) /vagrant
       )
     end
-    
+
     # Install the package, and configure sshd
     config.vm.provision "shell" do |s|
       s.privileged = true
@@ -104,6 +104,25 @@ Vagrant.configure('2') do |config|
         rpm -v -i $(find ~/rpmbuild/* -name *.rpm)
         grep -q ^ForceCommand /etc/ssh/sshd_config || echo "#{sshd_config}" | tee -a /etc/ssh/sshd_config
       )
+    end
+
+  end
+
+  config.vm.define "el8-package" do |config|
+
+    config.vm.hostname = "el8"
+    config.vm.box = "rockylinux/8"
+
+    # Sync the development repository into the box
+    config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
+
+    # Use this for a second sshd instance...
+    config.vm.network "forwarded_port", host: 2223, guest: 23
+
+    # install package build dependencies
+    config.vm.provision "shell" do |s|
+      s.privileged = true
+      s.inline = %q(dnf install -y vim rpm-build rpmdevtools)
     end
 
   end
