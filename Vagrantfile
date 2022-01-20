@@ -108,21 +108,29 @@ Vagrant.configure('2') do |config|
 
   end
 
-  config.vm.define "el8-package" do |config|
+  config.vm.define "el8" do |config|
 
     config.vm.hostname = "el8"
     config.vm.box = "rockylinux/8"
-
-    # Sync the development repository into the box
     config.vm.synced_folder ".", "/vagrant", type: "rsync", rsync__exclude: ".git/"
-
-    # Use this for a second sshd instance...
     config.vm.network "forwarded_port", host: 2223, guest: 23
 
-    # install package build dependencies
+    %w(
+      /tmp/debian10.sif
+      /tmp/centos7.sif
+      /tmp/centos_stream8.sif
+     ).each do |file|
+       name = File.basename file
+       config.vm.provision "file", source: "#{file}", destination: "/tmp/#{name}"
+    end
+
+
     config.vm.provision "shell" do |s|
       s.privileged = true
-      s.inline = %q(dnf install -y vim rpm-build rpmdevtools)
+      s.inline = %q(
+        dnf install -y epel-release vim rpm-build rpmdevtools
+        dnf install -y singularity
+      )
     end
 
   end

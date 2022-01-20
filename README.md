@@ -236,8 +236,12 @@ used to build an RPM package as described in the [RPM Packaging Guide][06].
 Start the package build in a Vagrant box specified in [`Vagrantfile`][08].
 
 ```bash
-vagrant up el8-package
+box=el8 # for example Enterprise Linux 8
+# build test containers, start the Vagrant box and login
+./containers.sh && vagrant up $box && vagrant ssh $box
 ```
+
+Build the RPM package:
 
 ```bash
 # synced with the host
@@ -261,7 +265,7 @@ cp ~/rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm /vagrant
 # install the plugin if required
 vagrant plugin install vagrant-rsync-back
 # download packages from the Vagrant box
-vagrant rsync-back el8-package
+vagrant rsync-back $box
 ```
 
 [01]: sshd_container
