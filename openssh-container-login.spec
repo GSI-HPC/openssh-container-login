@@ -29,8 +29,8 @@ mkdir -p %{buildroot}/etc/ssh
 cp sshd_container.sh %{buildroot}/etc/ssh/sshd_container.sh
 
 %files
-/etc/default/sshd_container
-/etc/ssh/sshd_container.sh
+%attr(644,root,root)/etc/default/sshd_container
+%attr(755,root,root)/etc/ssh/sshd_container.sh
 %license LICENSE
 %doc README.md
 
