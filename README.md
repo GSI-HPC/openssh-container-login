@@ -268,6 +268,31 @@ vagrant plugin install vagrant-rsync-back
 vagrant rsync-back $box
 ```
 
+Configure `sshd` for testing:
+
+```bash
+# install the packages
+sudo rpm -i /vagrant/openssh-container-login*.rpm
+# append configuration for the sshd daemon
+cat <<EOF | sudo tee -a /etc/ssh/sshd_config
+PermitRootLogin yes
+AcceptEnv SINGULARITY_CONTAINER SSHD_CONTAINER_*
+ForceCommand /etc/ssh/sshd_container.sh
+EOF
+# add the Vagrant SSH key to the root account
+sudo -- sh -c '
+        mkdir ~root/.ssh && chmod 700 ~root/.ssh
+        cat ~vagrant/.ssh/authorized_keys > ~root/.ssh/authorized_keys
+        chmod 600 ~root/.ssh/authorized_keys
+'
+# restart the sshd daemon
+sudo systemctl restart sshd
+```
+
+Cf. development & testing section above.
+
+
+
 [01]: sshd_container
 [02]: sshd_container.sh
 [03]: https://sylabs.io/singularity
