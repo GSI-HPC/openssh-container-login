@@ -108,12 +108,16 @@ if [ "$SINGULARITY_CONTAINER" == "none" ]
 then
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
-                _debug "User command line ## $SSH_ORIGINAL_COMMAND"
-                exec $shell -l -c "$SSH_ORIGINAL_COMMAND"
+	        # reject login and notify
+                _debug "User command line ## $SSH_ORIGINAL_COMMAND failed."
+		echo "User command line ## $SSH_ORIGINAL_COMMAND failed. Contact the system administrator."
+                #exec $shell -l -c "$SSH_ORIGINAL_COMMAND"
         else
-                # print the login banner
-                test -f /etc/motd && cat /etc/motd
-                exec $shell -l
+                # reject login and notify
+                _debug "User login failed."
+                echo "User login failed. Contact the system administrator."
+                #test -f /etc/motd && cat /etc/motd
+                #exec $shell -l
         fi
 
 #...launched into a containers
@@ -128,8 +132,9 @@ else
         #...otherwise spawn a shell
         else
                 # define a prompt for Bash users
-                export SINGULARITYENV_PS1="\u@\h:\w > "
-                # print the login banner
+                #export SINGULARITYENV_PS1="\u@\h:\w > "
+                export SINGULARITYENV_PS1="[\u@\h \W]\$"
+		# print the login banner
                 test -f /etc/motd && cat /etc/motd
                 echo Container launched: $(realpath $SINGULARITY_CONTAINER)
                 exec singularity exec \
