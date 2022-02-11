@@ -70,8 +70,8 @@ case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
                 ;;
         # if empty, unset or blank use the default container if possible
 	(x|""|*)
-                # if the default is set...
-                if ! test -z "$SSHD_CONTAINER_DEFAULT"
+                # if the default is set and exists...
+                if test -f "$SSHD_CONTAINER_DEFAULT"
                 then
                         _debug "Using default container..."
                         SINGULARITY_CONTAINER=$SSHD_CONTAINER_DEFAULT
