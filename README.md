@@ -280,12 +280,9 @@ Use the Vagrant [vagrant-rsync-back][09] plug-in to copy the RPM packages
 from the box into the development repository:
 
 ```bash
+vagrant ssh-config $box > ssh-config
 # copy the packages into the working-directory
-cp ~/rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm /vagrant
-# install the plugin if required
-vagrant plugin install vagrant-rsync-back
-# download packages from the Vagrant box
-vagrant rsync-back $box
+scp -F ssh-config vagrant@${box}:'rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm' .
 ```
 
 Configure `sshd` for testing:
