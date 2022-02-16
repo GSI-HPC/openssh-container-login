@@ -276,20 +276,11 @@ rpmbuild -ba /vagrant/openssh-container-login.spec
 rpm -vql ~/rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm
 ```
 
-Use the Vagrant [vagrant-rsync-back][09] plug-in to copy the RPM packages
-from the box into the development repository:
-
-```bash
-vagrant ssh-config $box > ssh-config
-# copy the packages into the working-directory
-scp -F ssh-config vagrant@${box}:'rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm' .
-```
-
 Configure `sshd` for testing:
 
 ```bash
 # install the packages
-sudo rpm -i /vagrant/openssh-container-login*.rpm
+sudo rpm -i rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm
 # append configuration for the sshd daemon
 cat <<EOF | sudo tee -a /etc/ssh/sshd_config
 PermitRootLogin yes
@@ -308,6 +299,13 @@ sudo systemctl restart sshd
 
 Cf. development & testing section above.
 
+Copy the RPM packages from the box into the development repository:
+
+```bash
+vagrant ssh-config $box > ssh-config
+# copy the packages into the working-directory
+scp -F ssh-config vagrant@${box}:'rpmbuild/{SRPMS,RPMS/noarch}/openssh-container-login*.rpm' .
+```
 
 
 [01]: sshd_container
