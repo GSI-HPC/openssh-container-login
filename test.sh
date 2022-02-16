@@ -16,7 +16,7 @@ run() {
 export SSHD_CONTAINER_DEBUG=true
 
 # name of the Vagrant box used for testing
-box=centos7-test
+box=${1:-el8}
 
 # command used to identify the user login environment
 command='grep -i pretty /etc/os-release ; ps -p $(echo $PPID) -f --no-headers'

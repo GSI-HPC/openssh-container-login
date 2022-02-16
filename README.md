@@ -104,7 +104,7 @@ SendEnv=SINGULARITY_CONTAINER` or append this configuration an SSH per-user
 configuration file in `~/.ssh/config` or the  system-wide configuration file
 in `/etc/ssh/ssh_config`.
 
-## Development & Testing
+## Development
 
 Build the required singularity containers with the script [`containers.sh`][05].
 (This requires the `singularity` command installed on the host). The containers
@@ -118,6 +118,8 @@ SINGULARITY_CONTAINER=menu \
 SSHD_CONTAINER_CONFIG=sshd_container \
         bash -x ./sshd_container.sh
 ```
+
+### Configuration
 
 Start the test environment using the included [`Vagrantfile`][08] which copies
 the Singularity containers to `/tmp`:
@@ -143,6 +145,8 @@ vagrant ssh $box -- "
 "
 ```
 
+### Service
+
 Start `sshd` on port 23 in foreground for debugging:
 
 ```bash
@@ -155,14 +159,17 @@ ssh -F ssh-config -p 2223 vagrant@$box
 
 `ssh-config` provides the default configuration from Vagrant to connect with
 SSH to the box. Either alter the configuration file or use the SSH option `-p`
-to connect with the **non default port 2223**. Alternatively restart
-`sshd.service` to run on the default port 22:
+to connect with the **non default port 2223**. 
+
+Alternatively restart `sshd.service` to run on the default port 22:
 
 ```bash
 vagrant ssh $box -- sudo systemctl restart sshd.service
 # Note that this will influence `vagrant ssh` login and may make it difficult to
 # debug any issue with SSH login.
 ```
+
+## Testing
 
 The [`test.sh`](test.sh) script runs `ssh`, `scp`, `rsync` and `sftp` commands
 against the vagrant box for testing various command configurations on multiple
