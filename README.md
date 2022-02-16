@@ -119,25 +119,38 @@ SSHD_CONTAINER_CONFIG=sshd_container \
         bash -x ./sshd_container.sh
 ```
 
-Start the test environment using the included [`Vagrantfile`][08]:
-
-* Installs the `singularity` package from Fedora EPEL
-* Copies the Singularity containers to `/tmp`
-* Deploys [`sshd_container`][01] and [`sshd_container.sh`][02]
-* Configures `AcceptEnv` and `ForceCommand` in `/etc/ssh/sshd_config`
+Start the test environment using the included [`Vagrantfile`][08] which copies
+the Singularity containers to `/tmp`:
 
 ```bash
-vagrant up centos7-test
+vagrant up $box
+# configuration for sshd
+sshd_config=\
+'PermitRootLogin yes
+AcceptEnv SINGULARITY_CONTAINER SSHD_CONTAINER_*
+ForceCommand /etc/ssh/sshd_container.sh'
+# configure the box
+vagrant ssh $box -- "
+        echo 'Text from /etc/motd' | sudo tee /etc/motd
+        echo 'Dummy content' | sudo tee /srv/dummy.txt
+        sudo cp -v /vagrant/sshd_container /etc/default/sshd_container
+        sudo cp -v /vagrant/sshd_container.sh /etc/ssh/sshd_container.sh
+        echo '$sshd_config' | sudo tee -a /etc/ssh/sshd_config
+        sudo mkdir ~root/.ssh
+        sudo chmod 700 ~root/.ssh
+        cat ~vagrant/.ssh/authorized_keys | sudo tee -a ~root/.ssh/authorized_keys
+        sudo chmod 600 ~root/.ssh/authorized_keys
+"
 ```
 
 Start `sshd` on port 23 in foreground for debugging:
 
 ```bash
 # start a second instance of sshd in foreground on port 23
-vagrant ssh centos7-test -- sudo /sbin/sshd -o LogLevel=DEBUG -De -p 23
+vagrant ssh $box -- sudo /sbin/sshd -o LogLevel=DEBUG -De -p 23
 # connect via the forwarding port (cf. Vagrantfile)
-vagrant ssh-config centos7-test > ssh-config
-ssh -F ssh-config -p 2223 vagrant@centos7-test
+vagrant ssh-config $box > ssh-config
+ssh -F ssh-config -p 2223 vagrant@$box
 ```
 
 `ssh-config` provides the default configuration from Vagrant to connect with
@@ -146,7 +159,7 @@ to connect with the **non default port 2223**. Alternatively restart
 `sshd.service` to run on the default port 22:
 
 ```bash
-vagrant ssh centos7-test -- sudo systemctl restart sshd.service
+vagrant ssh $box -- sudo systemctl restart sshd.service
 # Note that this will influence `vagrant ssh` login and may make it difficult to
 # debug any issue with SSH login.
 ```
@@ -170,29 +183,29 @@ By default login launches a container specified with `SSHD_CONTAINER_DEFAULT`:
 
 ```bash
 # login into a containerized interactive shell
->>> ssh -F ssh-config vagrant@centos7-test
+>>> ssh -F ssh-config vagrant@$box
 Container launched: /tmp/debian10.sif
 vagrant@centos7:~ >
 # run a containerized command
->>> ssh -F ssh-config vagrant@centos7-test -- /bin/ps -fH
+>>> ssh -F ssh-config vagrant@$box -- /bin/ps -fH
 UID        PID  PPID  C STIME TTY          TIME CMD
 vagrant   2832  2829  0 06:01 ?        00:00:00 sshd: vagrant@notty
 vagrant   2833  2832  0 06:01 ?        00:00:00   Singularity runtime parent
 vagrant   2854  2833  0 06:01 ?        00:00:00     /bin/ps -fH
 # test if stdin works as expected
->>> echo 1 2 3 4 | ssh -F ssh-config vagrant@centos7-test -- cat
+>>> echo 1 2 3 4 | ssh -F ssh-config vagrant@$box -- cat
 1 2 3 4
 ```
 
 File transfer with `scp`, `rsync` and `sftp`:
 
 ```bash
-scp -d -F ssh-config vagrant@centos7-test:/bin/bash /tmp
-scp -d -F ssh-config /bin/bash vagrant@centos7-test:/tmp
-rsync -e 'ssh -F ssh-config' /bin/bash vagrant@centos7-test:/tmp
-rsync -e 'ssh -F ssh-config' vagrant@centos7-test:/bin/bash /tmp
-sftp -F ssh-config vagrant@centos7-test:/bin/bash /tmp
-sftp -F ssh-config vagrant@centos7-test:/tmp <<< $'put /bin/bash'
+scp -d -F ssh-config vagrant@$box:/bin/bash /tmp
+scp -d -F ssh-config /bin/bash vagrant@$box:/tmp
+rsync -e 'ssh -F ssh-config' /bin/bash vagrant@$box:/tmp
+rsync -e 'ssh -F ssh-config' vagrant@$box:/bin/bash /tmp
+sftp -F ssh-config vagrant@$box:/bin/bash /tmp
+sftp -F ssh-config vagrant@$box:/tmp <<< $'put /bin/bash'
 ```
 
 _Note that the container images require to have corresponding packages
@@ -202,16 +215,16 @@ Users can specify a specific container with the variable `SINGULARITY_CONTAINER`
 
 ```bash
 >>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
-        ssh -F ssh-config -o SendEnv=SINGULARITY_CONTAINER vagrant@centos7-test
+        ssh -F ssh-config -o SendEnv=SINGULARITY_CONTAINER vagrant@$box
 Container launched: /tmp/centos7.sif
-vagrant@centos7:~ > 
+vagrant@el7:~ > 
 ```
 
 Login into the host environment using `SINGULARITY_CONTAINER=none`:
 
 ```bash
->>> SINGULARITY_CONTAINER=none ssh -F ssh-config vagrant@centos7-test
-[vagrant@centos7 ~]$
+>>> SINGULARITY_CONTAINER=none ssh -F ssh-config vagrant@$box
+[vagrant@el7 ~]$
 ```
 
 `SINGULARITY_CONTAINER=menu` will present a list of available containers defined
