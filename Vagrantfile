@@ -38,7 +38,7 @@ Vagrant.configure('2') do |config|
       s.privileged = true
       s.inline = %q(
         dnf install -y epel-release 
-        dnf install -y singularity vim rpm-build rpmdevtools
+        dnf install -y apptainer vim rpm-build rpmdevtools
       )
     end
 
