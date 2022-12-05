@@ -62,6 +62,7 @@ case ${APPTAINER_CONTAINER+x$APPTAINER_CONTAINER} in
                 case "$APPTAINER_CONTAINER" in
                 (none|menu)
                         _debug "User explicitly selects none|menu"
+                        SSHD_CONTAINER=$APPTAINER_CONTAINER
                         ;;
                 (*)
                         # check if container exits
@@ -130,7 +131,7 @@ else
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
                 _debug "User command line ## $SSH_ORIGINAL_COMMAND"
-                exec $container_runtime exec \
+                exec apptainer exec \
                      $SSHD_CONTAINER_OPTIONS \
                      $SSHD_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
 
@@ -139,7 +140,7 @@ else
                 # print the login banner
                 test -f /etc/motd && cat /etc/motd
                 echo Container launched: $(realpath $SSHD_CONTAINER)
-                exec $container_runtime exec \
+                exec apptainer exec \
                      $SSHD_CONTAINER_OPTIONS \
                      $SSHD_CONTAINER $shell -l
         fi
