@@ -1,5 +1,5 @@
 #
-# Copyright 2021 Victor Penso
+# Copyright 2021-2022 Victor Penso
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-VERSION=1.0
+VERSION=2.0
 
 _debug() {
         if [ "$SSHD_CONTAINER_DEBUG" = "true" ]; then
@@ -119,21 +119,45 @@ then
 #...launched into a containers
 #
 else
+
+        # select the container run-time to use
+        container_runtime=
+        if command -v singularity >/dev/null
+        then
+              runtime=$(which singularity)
+              if test -L $runtime
+              then
+                      _debug "singularity executable is a symbolic link..."
+              else
+                      container_runtime=$runtime
+                      # define a prompt for Bash users
+                      export SINGULARITYENV_PS1="\u@\h:\w > "
+              fi
+        fi
+
+        # ...always use Apptainer if available
+        if command -v apptainer >/dev/null
+        then
+                container_runtime=$(which apptainer)
+                unset SINGULARITYENV_PS1
+                # define a prompt for Bash users
+                export APPTAINERENV_PS1="\u@\h:\w > "
+        fi
+
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
                 _debug "User command line ## $SSH_ORIGINAL_COMMAND"
-                exec singularity exec \
+                exec $container_runtime exec \
                      $SSHD_CONTAINER_OPTIONS \
                      $SINGULARITY_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
         #...otherwise spawn a shell
         else
-                # define a prompt for Bash users
-                export SINGULARITYENV_PS1="\u@\h:\w > "
                 # print the login banner
                 test -f /etc/motd && cat /etc/motd
                 echo Container launched: $(realpath $SINGULARITY_CONTAINER)
-                exec singularity exec \
+                exec $container_runtime exec \
                      $SSHD_CONTAINER_OPTIONS \
                      $SINGULARITY_CONTAINER $shell -l
         fi
 fi
+
