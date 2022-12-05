@@ -114,7 +114,7 @@ Work on the login script using your host:
 
 ```bash
 SSHD_CONTAINER_DEBUG=true \
-SINGULARITY_CONTAINER=menu \
+APPTAINER_CONTAINER=menu \
 SSHD_CONTAINER_CONFIG=sshd_container \
         bash -x ./sshd_container.sh
 ```
@@ -129,7 +129,7 @@ vagrant up $box
 # configuration for sshd
 sshd_config=\
 'PermitRootLogin yes
-AcceptEnv SINGULARITY_CONTAINER SSHD_CONTAINER_*
+AcceptEnv APPTAINER_CONTAINER SSHD_CONTAINER_*
 ForceCommand /etc/ssh/sshd_container.sh'
 # configure the box
 vagrant ssh $box -- "
@@ -180,8 +180,8 @@ functionality of the login script manually.  Adjust the `ssh-config` for the
 following example accordingly:
 
 ```bash
-# propagete SINGULARITY_CONTAINER to the server
-echo "  SendEnv=SINGULARITY_CONTAINER" >> ssh-config
+# propagete APPTAINER_CONTAINER to the server
+echo "  SendEnv=APPTAINER_CONTAINER" >> ssh-config
 # change the SSH forwarding port (cf. Vagrantfile)
 sed -i 's/2222/2223/' ssh-config
 ```
@@ -221,24 +221,24 @@ installed cf. [`containers.sh`][05]._
 Users can specify a specific container with the variable `SINGULARITY_CONTAINER`:
 
 ```bash
->>> SINGULARITY_CONTAINER=/tmp/centos7.sif \
-        ssh -F ssh-config -o SendEnv=SINGULARITY_CONTAINER vagrant@$box
+>>> APPTAINER_CONTAINER=/tmp/centos7.sif \
+        ssh -F ssh-config -o SendEnv=APPTAINER_CONTAINER vagrant@$box
 Container launched: /tmp/centos7.sif
 vagrant@el7:~ > 
 ```
 
-Login into the host environment using `SINGULARITY_CONTAINER=none`:
+Login into the host environment using `APPTAINER_CONTAINER=none`:
 
 ```bash
->>> SINGULARITY_CONTAINER=none ssh -F ssh-config vagrant@$box
+>>> APPTAINER_CONTAINER=none ssh -F ssh-config vagrant@$box
 [vagrant@el7 ~]$
 ```
 
-`SINGULARITY_CONTAINER=menu` will present a list of available containers defined
+`APPTAINER_CONTAINER=menu` will present a list of available containers defined
 in the [`sshd_container`][01] configuration:
 
 ```bash
->>> SINGULARITY_CONTAINER=menu ssh -F ssh-config vagrant@centos7-test
+>>> APPTAINER_CONTAINER=menu ssh -F ssh-config vagrant@centos7-test
 Available containers
 1) /tmp/debian10.sif
 2) /tmp/centos7.sif

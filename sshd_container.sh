@@ -39,31 +39,36 @@ else
         _debug "$SSHD_CONTAINER_CONFIG configuration file missing"
 fi
 
-_debug "User defined SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER"
+# ...Apptainer is not in PATH
+if ! command -v apptainer >/dev/null
+then
+        SSHD_CONTAINER=none
+fi
 
 # Login to the root account...
 #
 if [ "$USER" == "root" ]
 then
         # ...without launching a container
-        SINGULARITY_CONTAINER=none
+        SSHD_CONTAINER=none
 fi
 
+_debug "User defined APPTAINER_CONTAINER=$APPTAINER_CONTAINER"
 # Process the SINGULARITY_CONTAINER environment variable
 #
-case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
+case ${APPTAINER_CONTAINER+x$APPTAINER_CONTAINER} in
         # if the variable is set...
 	(x*[![:blank:]]*)
-                case "$SINGULARITY_CONTAINER" in
+                case "$APPTAINER_CONTAINER" in
                 (none|menu)
                         _debug "User explicitly selects none|menu"
                         ;;
                 (*)
                         # check if container exits
-                        if ! test -f $SINGULARITY_CONTAINER
+                        if ! test -f $APPTAINER_CONTAINER
                         then
-                                echo "Container $SINGULARITY_CONTAINER missing"
-                                SINGULARITY_CONTAINER=none
+                                echo "Container $APPTAINER_CONTAINER missing"
+                                SSHD_CONTAINER=none
                         fi
                         ;;
                 esac
@@ -74,27 +79,27 @@ case ${SINGULARITY_CONTAINER+x$SINGULARITY_CONTAINER} in
                 if ! test -z "$SSHD_CONTAINER_DEFAULT"
                 then
                         _debug "Using default container..."
-                        SINGULARITY_CONTAINER=$SSHD_CONTAINER_DEFAULT
+                        SSHD_CONTAINER=$SSHD_CONTAINER_DEFAULT
                 # ...otherwise launch without a container
                 else
                         _debug "No default container configuration..."
-                        SINGULARITY_CONTAINER=none
+                        SSHD_CONTAINER=none
                 fi
                 ;;
 esac
-_debug "Using container SINGULARITY_CONTAINER=$SINGULARITY_CONTAINER"
+_debug "Using container SSHD_CONTAINER=$SSHD_CONTAINER"
 
 
 # Present a menu if requested by the user...
 #
-if [ "$SINGULARITY_CONTAINER" == "menu" ]
+if [ "$SSHD_CONTAINER" == "menu" ]
 then
 
         echo "Available containers"
         PS3="Select: "
         select opt in "${SSHD_CONTAINER_MENU[@]}"
         do
-                SINGULARITY_CONTAINER=$opt
+                SSHD_CONTAINER=$opt
                 break
         done
 fi
@@ -104,7 +109,7 @@ shell=$(getent passwd $USER | cut -d : -f 7)
 
 # If no container was selected or a container is not existing...
 #
-if [ "$SINGULARITY_CONTAINER" == "none" ]
+if [ "$SSHD_CONTAINER" == "none" ]
 then
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
@@ -119,45 +124,24 @@ then
 #...launched into a containers
 #
 else
-
-        # select the container run-time to use
-        container_runtime=
-        if command -v singularity >/dev/null
-        then
-              runtime=$(which singularity)
-              if test -L $runtime
-              then
-                      _debug "singularity executable is a symbolic link..."
-              else
-                      container_runtime=$runtime
-                      # define a prompt for Bash users
-                      export SINGULARITYENV_PS1="\u@\h:\w > "
-              fi
-        fi
-
-        # ...always use Apptainer if available
-        if command -v apptainer >/dev/null
-        then
-                container_runtime=$(which apptainer)
-                unset SINGULARITYENV_PS1
-                # define a prompt for Bash users
-                export APPTAINERENV_PS1="\u@\h:\w > "
-        fi
+        # define a prompt for Bash users
+        export APPTAINERENV_PS1="\u@\h:\w > "
 
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
                 _debug "User command line ## $SSH_ORIGINAL_COMMAND"
                 exec $container_runtime exec \
                      $SSHD_CONTAINER_OPTIONS \
-                     $SINGULARITY_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
+                     $SSHD_CONTAINER $shell -l -c "$SSH_ORIGINAL_COMMAND"
+
         #...otherwise spawn a shell
         else
                 # print the login banner
                 test -f /etc/motd && cat /etc/motd
-                echo Container launched: $(realpath $SINGULARITY_CONTAINER)
+                echo Container launched: $(realpath $SSHD_CONTAINER)
                 exec $container_runtime exec \
                      $SSHD_CONTAINER_OPTIONS \
-                     $SINGULARITY_CONTAINER $shell -l
+                     $SSHD_CONTAINER $shell -l
         fi
 fi
 
