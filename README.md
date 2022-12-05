@@ -3,13 +3,9 @@
 The [`sshd_container.sh`][02] script distributed in this repository is used in
 conjunction with the OpenSSH `sshd` daemon to launch a Linux container for each
 `ssh` login from a client. This containerizes the environment of user sessions
-by default. Users may specify an environment variable `SINGULARITY_CONTAINER`
+by default. Users may specify an environment variable `APPTAINER_CONTAINER`
 before executing `ssh` login in order to select a specific container on the
 login node.
-
-_Note that this implementation uses [Singularity][03] as container run-time.
-However this approach should be applicable to other container run-time systems
-as well (for example [Podman][04])._
 
 ## Configuration
 
