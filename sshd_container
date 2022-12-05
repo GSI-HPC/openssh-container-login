@@ -4,10 +4,10 @@
 # List of command-line options appended to the `singularity` command
 export SSHD_CONTAINER_OPTIONS="--bind /srv"
 # Default container to start unless the users passes the environment
-# variable SINGULARITY_CONTAINER at login
+# variable APPTAINER_CONTAINER at login
 export SSHD_CONTAINER_DEFAULT=/tmp/rockylinux8.sif
 # Items presented to the user for selection when requesting a menu
-# with SINGUALRITY_CONTAINER=menu
+# with APPTAINER_CONTAINER=menu
 declare -a SSHD_CONTAINER_MENU=(
         /tmp/debian10.sif
         /tmp/centos7.sif

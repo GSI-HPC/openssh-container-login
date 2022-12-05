@@ -125,8 +125,11 @@ then
 #...launched into a containers
 #
 else
-        # define a prompt for Bash users
-        export APPTAINERENV_PS1="\u@\h:\w > "
+
+        # propagate the container which has been launched
+        export APPTAINER_CONTAINER=$(realpath $SSHD_CONTAINER)
+        # ...backward compatibility for the Singularity SPANK plugin
+        export SINGULARITY_CONTAINER=$APPTAINER_CONTAINER
 
         if [ -n "$SSH_ORIGINAL_COMMAND" ] 
         then
@@ -137,6 +140,9 @@ else
 
         #...otherwise spawn a shell
         else
+                # define a prompt for Bash users
+                export APPTAINERENV_PS1="\u@\h:\w > "
+
                 # print the login banner
                 test -f /etc/motd && cat /etc/motd
                 echo Container launched: $(realpath $SSHD_CONTAINER)
