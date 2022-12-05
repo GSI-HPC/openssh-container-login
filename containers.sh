@@ -14,7 +14,7 @@ From: debian:10
 EOF
 
 test -f debian10.sif \
-        || singularity build --fakeroot debian10.sif debian10.def
+        || apptainer build --fakeroot debian10.sif debian10.def
 
 cat > centos7.def <<EOF
 Bootstrap: docker
@@ -24,16 +24,16 @@ From: centos:7
 EOF
 
 test -f centos7.sif \
-        || singularity build --fakeroot centos7.sif centos7.def
+        || apptainer build --fakeroot centos7.sif centos7.def
 
-cat > centos_stream8.def <<EOF
+cat > rockylinux8.def <<EOF
 Bootstrap: docker
-From: quay.io/centos/centos:stream8
+From: quay.io/rockylinux/rockylinux:8
 %post
   dnf install -y zsh openssh-clients openssh-server procps-ng rsync
 EOF
 
-test -f centos_stream8.sif \
-        || singularity build --fakeroot centos_stream8.sif centos_stream8.def
+test -f rockylinux8.sif \
+        || apptainer build --fakeroot rockylinux8.sif rockylinux8.def
 
 cd - >/dev/null

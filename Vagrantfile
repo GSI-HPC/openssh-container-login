@@ -6,7 +6,7 @@ Vagrant.configure('2') do |config|
   %w(
     /tmp/debian10.sif
     /tmp/centos7.sif
-    /tmp/centos_stream8.sif
+    /tmp/rockylinux8.sif
    ).each do |file|
      name = File.basename file
      config.vm.provision "file", source: "#{file}", destination: "/tmp/#{name}"
