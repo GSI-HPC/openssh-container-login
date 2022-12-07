@@ -39,11 +39,6 @@ else
         _debug "$SSHD_CONTAINER_CONFIG configuration file missing"
 fi
 
-# ...Apptainer is not in PATH
-if ! command -v apptainer >/dev/null
-then
-        SSHD_CONTAINER=none
-fi
 
 # Login to the root account...
 #
@@ -53,9 +48,9 @@ then
         SSHD_CONTAINER=none
 fi
 
-_debug "User defined APPTAINER_CONTAINER=$APPTAINER_CONTAINER"
-# Process the SINGULARITY_CONTAINER environment variable
+# Process the APPTAINER_CONTAINER environment variable
 #
+_debug "User defined APPTAINER_CONTAINER=$APPTAINER_CONTAINER"
 case ${APPTAINER_CONTAINER+x$APPTAINER_CONTAINER} in
         # if the variable is set...
 	(x*[![:blank:]]*)
@@ -103,6 +98,14 @@ then
                 SSHD_CONTAINER=$opt
                 break
         done
+fi
+
+# ...Apptainer is not in PATH
+if ! command -v apptainer >/dev/null
+then
+        # ...force non container login
+        echo Container run-time Apptainer in in \$PATH
+        SSHD_CONTAINER=none
 fi
 
 # Determine the shell used by the user
