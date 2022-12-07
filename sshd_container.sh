@@ -50,25 +50,36 @@ fi
 
 # Process the APPTAINER_CONTAINER environment variable
 #
-_debug "User defined APPTAINER_CONTAINER=$APPTAINER_CONTAINER"
 case ${APPTAINER_CONTAINER+x$APPTAINER_CONTAINER} in
+
         # if the variable is set...
 	(x*[![:blank:]]*)
+
                 case "$APPTAINER_CONTAINER" in
+
                 (none|menu)
                         _debug "User explicitly selects none|menu"
                         SSHD_CONTAINER=$APPTAINER_CONTAINER
                         ;;
+
                 (*)
+                
+                        _debug "User defined environment variable APPTAINER_CONTAINER=$APPTAINER_CONTAINER"
                         # check if container exits
                         if ! test -f $APPTAINER_CONTAINER
                         then
                                 echo "Container $APPTAINER_CONTAINER missing"
                                 SSHD_CONTAINER=none
+
+                        # ...otherwise use the user defined container
+                        else
+                                SSHD_CONTAINER=$APPTAINER_CONTAINER
                         fi
                         ;;
+
                 esac
                 ;;
+
         # if empty, unset or blank use the default container if possible
 	(x|""|*)
                 # if the default is set...
