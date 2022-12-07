@@ -233,7 +233,7 @@ Login into the host environment using `APPTAINER_CONTAINER=none`:
 in the [`sshd_container`][01] configuration:
 
 ```bash
->>> APPTAINER_CONTAINER=menu ssh -F ssh-config vagrant@centos7-test
+>>> APPTAINER_CONTAINER=menu ssh -F ssh-config vagrant@$box
 Available containers
 1) /tmp/debian10.sif
 2) /tmp/centos7.sif

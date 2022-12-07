@@ -1,5 +1,5 @@
 Name:           openssh-container-login
-Version:        1.0
+Version:        2.0
 Release:        0
 
 BuildArch:      noarch
@@ -35,6 +35,9 @@ cp sshd_container.sh %{buildroot}/etc/ssh/sshd_container.sh
 %doc README.md
 
 %changelog
+* Wed Dec 07 2022 Victor Penso <vic.penso@gmail.com> 2.0
+  - Apptainer support with APPTAINER_CONTAINER
+  - Remove support for SINGULARITY_CONTAINER
 * Wed Jan 19 2022 Victor Penso <vic.penso@gmail.com> 1.0
   - Add LICENSE and README to the package
   - Build package on Enterprise Linux 8
