@@ -40,13 +40,6 @@ else
 fi
 
 
-# Login to the root account...
-#
-if [ "$USER" == "root" ]
-then
-        # ...without launching a container
-        SSHD_CONTAINER=none
-fi
 
 # Process the APPTAINER_CONTAINER environment variable
 #
@@ -116,6 +109,14 @@ if ! command -v apptainer >/dev/null
 then
         # ...force non container login
         echo Container run-time Apptainer in in \$PATH
+        SSHD_CONTAINER=none
+fi
+
+# Login to the root account...
+#
+if [ "$USER" == "root" ]
+then
+        # ...force container less login
         SSHD_CONTAINER=none
 fi
 
