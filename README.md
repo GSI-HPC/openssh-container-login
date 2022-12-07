@@ -149,12 +149,12 @@ Start `sshd` on port 23 in foreground for debugging:
 vagrant ssh $box -- sudo /sbin/sshd -o LogLevel=DEBUG -De -p 23
 # connect via the forwarding port (cf. Vagrantfile)
 vagrant ssh-config $box > ssh-config
-ssh -F ssh-config -p 2223 vagrant@$box
+ssh -F ssh-config -p 23 vagrant@$box
 ```
 
 `ssh-config` provides the default configuration from Vagrant to connect with
 SSH to the box. Either alter the configuration file or use the SSH option `-p`
-to connect with the **non default port 2223**. 
+to connect with the **non default port 23**. 
 
 Alternatively restart `sshd.service` to run on the default port 22:
 
@@ -178,7 +178,7 @@ following example accordingly:
 # propagete APPTAINER_CONTAINER to the server
 echo "  SendEnv=APPTAINER_CONTAINER" >> ssh-config
 # change the SSH forwarding port (cf. Vagrantfile)
-sed -i 's/2222/2223/' ssh-config
+sed -i 's/22/23/' ssh-config
 ```
 
 By default login launches a container specified with `SSHD_CONTAINER_DEFAULT`:
@@ -202,11 +202,11 @@ vagrant   2854  2833  0 06:01 ?        00:00:00     /bin/ps -fH
 File transfer with `scp`, `rsync` and `sftp`:
 
 ```bash
-scp -d -F ssh-config vagrant@$box:/bin/bash /tmp
+scp -d -F ssh-config vagrant@$box:/srv/dummy.txt /tmp
 scp -d -F ssh-config /bin/bash vagrant@$box:/tmp
 rsync -e 'ssh -F ssh-config' /bin/bash vagrant@$box:/tmp
-rsync -e 'ssh -F ssh-config' vagrant@$box:/bin/bash /tmp
-sftp -F ssh-config vagrant@$box:/bin/bash /tmp
+rsync -e 'ssh -F ssh-config' vagrant@$box:/srv/dummy.txt /tmp
+sftp -F ssh-config vagrant@$box:/srv/dummy.txt /tmp
 sftp -F ssh-config vagrant@$box:/tmp <<< $'put /bin/bash'
 ```
 

@@ -1,7 +1,15 @@
-# -*- mode: ruby -*-
 # vi: set ft=ruby :
 
 Vagrant.configure('2') do |config|
+
+  config.vm.provider :libvirt do |libvirt|
+    # Use QEMU session instead of system connection
+    libvirt.qemu_use_session = true
+    # URI of QEMU system connection, use to obtain IP address for management, default is below
+    libvirt.system_uri = 'qemu:///system'
+    # Management network device, default is below
+    libvirt.management_network_device = 'virbr0'
+  end
 
   %w(
     /tmp/debian10.sif
