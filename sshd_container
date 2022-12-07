@@ -1,6 +1,8 @@
 # -*- mode: bash -*-
 # vi: set ft=bash nospell :
 
+# Enable debugging of the sshd_container.sh script
+export SSHD_CONTAINER_DEBUG=true
 # List of command-line options appended to the `singularity` command
 export SSHD_CONTAINER_OPTIONS="--bind /srv"
 # Default container to start unless the users passes the environment
