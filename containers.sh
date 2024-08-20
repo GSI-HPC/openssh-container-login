@@ -16,16 +16,6 @@ EOF
 test -f debian10.sif \
         || apptainer build --fakeroot debian10.sif debian10.def
 
-cat > centos7.def <<EOF
-Bootstrap: docker
-From: centos:7
-%post
-  yum install -y zsh openssh-clients openssh-server procps-ng rsync
-EOF
-
-test -f centos7.sif \
-        || apptainer build --fakeroot centos7.sif centos7.def
-
 cat > rockylinux8.def <<EOF
 Bootstrap: docker
 From: quay.io/rockylinux/rockylinux:8
@@ -35,5 +25,15 @@ EOF
 
 test -f rockylinux8.sif \
         || apptainer build --fakeroot rockylinux8.sif rockylinux8.def
+
+cat > almalinux9.def <<EOF
+Bootstrap: docker
+From: quay.io/almalinux/almalinux:9
+%post
+  dnf install -y zsh openssh-clients openssh-server procps-ng rsync
+EOF
+
+test -f almalinux9.sif \
+        || apptainer build --fakeroot almalinux9.sif almalinux9.def
 
 cd - >/dev/null
