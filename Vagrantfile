@@ -2,6 +2,11 @@
 
 Vagrant.configure('2') do |config|
 
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.memory = 2048
+    libvirt.cpus = 4
+  end
+
   %w(
     /tmp/debian10.sif
     /tmp/rockylinux8.sif
