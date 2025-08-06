@@ -1,0 +1,12 @@
+{
+  "title": "OpenSSH Container Login",
+  "upload_type": "software",
+  "description": "The script distributed in this repository is used in conjunction with the OpenSSH sshd daemon to launch a Linux container for each ssh login from a client. This containerizes the environment of user sessions by default. Users may specify an environment variable APPTAINER_CONTAINER before executing ssh login in order to select a specific container on the login node.",
+  "creators": [
+    {
+      "name": "Penso, Victor",
+      "affiliation": "GSI Helmholtz Centre for Heavy Ion Research, Darmstadt, Germany"
+    }
+  ]
+}
+
