@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16752892.svg)](https://doi.org/10.5281/zenodo.16752892)
+
 # OpenSSH Container Login
 
 The [`sshd_container.sh`][02] script distributed in this repository is used in
